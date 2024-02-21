@@ -4,7 +4,7 @@ import datetime
 # Create your models here.
 
 def user_profile_directory(instance , filename):
-    return f"uploads/{instance}/{filename}-{datetime.datetime.now()}"
+    return f"{instance}/{filename}"
 
 class User(AbstractUser):
     email   = models.EmailField()
