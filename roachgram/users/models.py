@@ -1,9 +1,10 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
+import datetime
 # Create your models here.
 
-def user_profile_directory(instance):
-    return f"uploads/{instance.id}"
+def user_profile_directory(instance , filename):
+    return f"uploads/{instance}/{filename}-{datetime.datetime.now()}"
 
 class User(AbstractUser):
     email   = models.EmailField()
