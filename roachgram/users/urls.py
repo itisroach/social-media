@@ -3,5 +3,5 @@ from . import views
 
 
 urlpatterns = [
-    path("<str:username>" , views.userPage , name="user-page")
+    path("@<str:username>" , views.userPage , name="user-page")
 ]

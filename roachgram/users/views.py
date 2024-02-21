@@ -1,5 +1,11 @@
 from django.shortcuts import render
+from .models import User
 
-# Create your views here.
-def userPage(request):
-    return render(request , "userPage.html")
+
+def userPage(request , username):
+    user = User.objects.get(username = username)
+    context = {
+        "user": user,
+        "htmlTitle": f"{username}'s Page"
+    }
+    return render(request , "userPage.html" , context)
