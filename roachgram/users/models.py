@@ -7,8 +7,8 @@ def user_profile_directory(instance):
 
 class User(AbstractUser):
     email   = models.EmailField()
-    about   = models.TextField(max_length=255)
-    profile = models.ImageField(upload_to=user_profile_directory)
+    about   = models.TextField(max_length=255 , blank=True , null=True)
+    profile = models.ImageField(upload_to=user_profile_directory , blank=True , null=True)
 
     REQUIRED_FIELDS = ["email"]
 
