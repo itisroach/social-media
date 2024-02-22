@@ -9,10 +9,10 @@
     <div class="px-3 py-2">
       
         <div class="flex flex-col justify-center items-center gap-1 text-center">
-            <img class="block mx-auto bg-center bg-no-repeat bg-cover w-20 h-20 rounded-full shadow-lg" src=.{{ user.profile.url }}/>
-            <p class="font-sans font-semibold text-xl">@{{user.username}}</p>
-            <p class="font-sans font-semibold opacity-50">{{user.name}}sdsa</p>
-            <p>{{ user.about }}</p>
+            <img class="block mx-auto bg-center bg-no-repeat bg-cover w-20 h-20 rounded-full shadow-lg" src=.{{ account.profile.url }}/>
+            <p class="font-sans font-semibold text-xl">@{{account.username}}</p>
+            <p class="font-sans font-semibold opacity-50">{{account.name}}sdsa</p>
+            <p>{{ account.about }}</p>
         </div>
 
 
@@ -33,11 +33,17 @@
         </div>
       
 
- 
-        <div class="flex justify-center gap-2 my-5 ml-6">
-            <button class="bg-blue-500 px-10 py-2 rounded-full text-white shadow-lg">Follow</button>
-            <button class="bg-white border border-gray-500 px-10 py-2 rounded-full shadow-lg">Message</button>
-        </div>
+        
+        {% if user.is_authenticated %}
+            <div class="flex justify-center gap-2 my-5 ml-6">
+                {% if not isFollowingTheUser %}
+                <a href="{{account.username}}/follow/" class="bg-blue-500 w-[143px] text-center px-10 py-2 rounded-full text-white shadow-lg">Follow</a>
+                {% else %}
+                <a href="{{account.username}}/unfollow/" class="bg-red-500 w-[143px] text-center px-10 py-2 rounded-full text-white shadow-lg">Unfollow</a>
+                {% endif %}
+                <button class="bg-white border border-gray-500 px-10 py-2 rounded-full shadow-lg">Message</button>
+            </div>
+        {% endif %}
         
 
      
