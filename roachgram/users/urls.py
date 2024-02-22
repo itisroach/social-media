@@ -1,7 +1,5 @@
 from django.urls import path
 from . import views
-from django.conf import settings
-from django.conf.urls.static import static
 from django.contrib.auth import views as authViews
 
 urlpatterns = [
@@ -13,6 +11,4 @@ urlpatterns = [
     path("register" , views.registeration , name="register-user"),
     path("login" , authViews.LoginView.as_view(template_name="login.html" , redirect_authenticated_user=True) , name="login-user"),
     path("logout" , authViews.LogoutView.as_view() , name="logout-user")
-
-
-] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+]
