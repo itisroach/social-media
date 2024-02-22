@@ -135,5 +135,6 @@ CRISPY_ALLOWED_TEMPLATE_PACKS = "tailwind"
 
 CRISPY_TEMPLATE_PACK = "tailwind"
 
-LOGIN_REDIRECT_URL = "register-user"
+LOGIN_REDIRECT_URL = "home-page"
+LOGIN_URL = "login-user"
 LOGOUT_REDIRECT_URL = 'login-user'
