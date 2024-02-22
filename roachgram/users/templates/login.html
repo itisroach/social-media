@@ -1,0 +1,17 @@
+{% extends "main.html" %}
+{% load tailwind_filters %}
+{% load crispy_forms_tags %}
+
+	{% block content %}          
+
+	<h1 class="text-center text-2xl font-semibold font-sans mt-10">Login To Your Account</h1>
+	<div class="container py-5 mt-10 flex flex-col justify-center items-center">
+		<form method="POST" action="" class="px-8 bg-gray-200 py-4 w-[500px] flex justify-center items-center flex-col rounded-xl">
+			{% csrf_token %}
+			{{ form|crispy }}      
+            <button class="mb-4 bg-blue-500 rounded-lg text-white px-6 py-2" type="submit">Login</button>              
+        </form>
+        <a class="text-blue-400 underline" href="{% url 'register-user' %}">Don't Have An Account? Signup Instead.</a>
+	</div>
+
+{% endblock %}
