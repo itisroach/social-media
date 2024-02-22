@@ -3,7 +3,7 @@ from users.models import User
 # Create your models here.
 
 def mediaDirectory(instance , filename):
-    return f"{instance}/media/{filename}"
+    return f"{instance.user.username}/media/{filename}"
 
 class Post(models.Model):
     user      = models.ForeignKey(User , on_delete=models.CASCADE , related_name="creator")
