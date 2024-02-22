@@ -1,0 +1,17 @@
+{% extends "main.html" %}
+{% load tailwind_filters %}
+{% load crispy_forms_tags %}
+
+	{% block content %}          
+
+	<!--Register--> 
+	<div class="container py-5 flex flex-col justify-center items-center">
+		<form enctype="multipart/form-data" method="POST" action="" class="w-[750px] rounded-xl border-2 px-8 py-4 bg-gray-200 flex justify-center items-center flex-col">
+			{% csrf_token %}
+			{% crispy form %}                    
+            <a class="text-blue-400 underline" href="{% url 'login-user' %}">If You Already Have An Account, Login Instead.</a>
+		</form>
+		
+	</div>
+
+{% endblock %}
