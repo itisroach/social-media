@@ -21,6 +21,8 @@ class User(AbstractUser):
 class FollowUser(models.Model):
     follower = models.ForeignKey(User , on_delete=models.CASCADE , related_name="followers")
     following = models.ForeignKey(User , on_delete=models.CASCADE , related_name="followings")
+    createdAt = models.TimeField(auto_now_add=True , blank=True , null=True)
+    updatedAt = models.TimeField(auto_now=True , blank=True , null=True)
 
 
     def __str__(self):
