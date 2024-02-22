@@ -1,7 +1,22 @@
 from django.shortcuts import render , redirect
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required 
 from .models import User , FollowUser
 from django.contrib import messages
+from .forms import RegisterForm
+from django.contrib.auth import login
+
+def registeration(request):
+    if request.method == "POST":
+        form = RegisterForm(request.POST , request.FILES)
+        if (form.is_valid()):
+            registeredUser = form.save()
+            login(request , registeredUser)
+            messages.success(request , "your account created succcessfully")
+            return redirect("user-page" , "reza")
+    
+    else:
+        form = RegisterForm()
+    return render(request , "register.html" , {"form": form})
 
 
 
@@ -33,7 +48,9 @@ def followUser(request , username):
         messages.error(request , "user not found")
         return redirect("user-page" , "reza")
     
-
+    if (request.user.id == user.id):
+        messages.error(request , "you can't follow yourself")
+        return redirect("user-page" , "reza")  
     # checks for user if it's already following
     isFollowing = FollowUser.objects.filter(follower=request.user, following = user).exists()
 
