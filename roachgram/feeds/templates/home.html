@@ -1,0 +1,10 @@
+{% extends 'main.html' %}
+
+{% block content %}
+
+{% for post in feedPosts %}
+<img src="{{post.image.url}}" alt="">
+<p>{{ post.caption }}</p>
+{% endfor %}
+
+{% endblock content %}
