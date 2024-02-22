@@ -16,7 +16,12 @@ def registeration(request):
     
     else:
         form = RegisterForm()
-    return render(request , "register.html" , {"form": form})
+
+    context = {
+        "form": form,
+        "htmlTitle": "Register New Account"
+    }
+    return render(request , "register.html" , context)
 
 
 
@@ -24,16 +29,21 @@ def userPage(request , username):
     user = User.objects.get(username = username)
 
     # make this statement login required
+    isFollowing = False
     if request.user.is_authenticated:
         # checks for user if it's following 
-        global isFollowing
         isFollowing = FollowUser.objects.filter(follower=request.user, following = user).exists()
-
+    
+    # get number of followers and number of followings
+    followersCount = FollowUser.objects.filter(following=user).count()
+    followingsCount = FollowUser.objects.filter(follower=user).count()
 
     context = {
         "account": user,
         "htmlTitle": f"{username}'s Page",
-        "isFollowingTheUser": isFollowing
+        "isFollowingTheUser": isFollowing,
+        "followersCount": followersCount,
+        "followingsCount": followingsCount
     }
 
     return render(request , "userPage.html" , context)
