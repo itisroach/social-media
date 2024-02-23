@@ -10,13 +10,6 @@
 </head>
 <body>
 
-    {% if user.is_authenticated %}
-    <form method="post" class="px-4 py-2" action="{% url 'logout-user' %}">
-        {% csrf_token %}
-        <button class="text-white rounded-lg bg-red-600 px-6 py-2" type="submit">logout</button>
-    </form>
-    {% endif %}
-
     {% if messages %}
         <script>
             setTimeout(() => {
