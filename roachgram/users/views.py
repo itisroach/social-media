@@ -12,7 +12,7 @@ def registeration(request):
             registeredUser = form.save()
             login(request , registeredUser)
             messages.success(request , "your account created succcessfully")
-            return redirect("user-page" , "reza")
+            return redirect("home-page")
     
     else:
         form = RegisterForm()
