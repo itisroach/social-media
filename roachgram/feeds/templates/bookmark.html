@@ -1,0 +1,12 @@
+{% extends 'main.html' %}
+
+
+{% block  content %}
+{% if bookmarks %}
+    {% for bookmark in bookmarks %}
+    {% include 'post.html' with post=bookmark.post %}
+    {% endfor %}
+{% else %}
+<h1 class="text-white absolute ml-14 text-center text-3xl mt-96">You Have Not Bookmarked Any Post</h1>
+{% endif %}
+{% endblock content %}
