@@ -1,7 +1,7 @@
 from django.shortcuts import render , redirect , get_object_or_404
 from users.models import User , FollowUser
 from django.db.models import Q
-from .models import Post , Media , Like
+from .models import Post , Media , Like , Bookmark
 from django.contrib.auth.decorators import login_required
 # Create your views here.
 @login_required()
@@ -44,3 +44,17 @@ def likePost(request , pk):
         else:
             Like.objects.create(post=post , user=request.user)
     return redirect("home-page")
+
+@login_required()
+def bookmarkPost(request , pk):
+    post = Post.objects.get(id=pk)
+
+    if request.method == "POST":
+        bookmarkedBefore = Bookmark.objects.filter(post=post , user=request.user)
+
+        if bookmarkedBefore.exists():
+            bookmarkedBefore.delete()
+        else:
+            Bookmark.objects.create(user=request.user , post=post)
+
+        return redirect("home-page")
