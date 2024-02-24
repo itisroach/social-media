@@ -46,15 +46,17 @@ def userPage(request , username):
 def followUser(request , username):
 
     # check if user exists in database
+    
     try:
+        global user
         user = User.objects.get(username=username)
     except User.DoesNotExist:
         messages.error(request , "user not found")
-        return redirect("user-page" , "reza")
+        return redirect("user-page" , username)
     
     if (request.user.id == user.id):
         messages.error(request , "you can't follow yourself")
-        return redirect("user-page" , "reza")  
+        return redirect("user-page" , user.username)  
     # checks for user if it's already following
     isFollowing = FollowUser.objects.filter(follower=request.user, following = user).exists()
 
