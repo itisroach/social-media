@@ -1,8 +1,13 @@
+from typing import Any
+from django.db.models.query import QuerySet
 from django.shortcuts import render , redirect , get_object_or_404
 from users.models import User , FollowUser
 from django.db.models import Q
 from .models import Post , Media , Like , Bookmark
 from django.contrib.auth.decorators import login_required
+from django.views.generic import ListView
+from django.contrib.auth.mixins import LoginRequiredMixin
+
 # Create your views here.
 @login_required()
 def home(request):
@@ -58,3 +63,11 @@ def bookmarkPost(request , pk):
             Bookmark.objects.create(user=request.user , post=post)
 
         return redirect("home-page")
+    
+
+class GetAllBookmarks(LoginRequiredMixin , ListView):
+    model = Bookmark
+    context_object_name = "bookmarks"
+    template_name = "bookmark.html"
+    def get_queryset(self) -> QuerySet[Any]:
+        return Bookmark.objects.filter(user=self.request.user).order_by("-createdAt")
