@@ -56,6 +56,8 @@ class Like(models.Model):
     user = models.ForeignKey(User , on_delete=models.CASCADE , related_name="user")
     post = models.ForeignKey(Post , on_delete=models.CASCADE , related_name="post")
 
+    createdAt = models.TimeField(auto_now_add=True)
+    updatedAt = models.TimeField(auto_now=True)
 
     def __str__(self) -> str:
         return f"{self.user.username} liked {self.post.id}"
@@ -66,6 +68,9 @@ class Like(models.Model):
 class Bookmark(models.Model):
     user = models.ForeignKey(User , on_delete=models.CASCADE)
     post = models.ForeignKey(Post , on_delete=models.CASCADE)
+
+    createdAt = models.TimeField(auto_now_add=True)
+    updatedAt = models.TimeField(auto_now=True)
 
     def __str__(self) -> str:
         return f"{self.post.id} saved by {self.user.username}"
