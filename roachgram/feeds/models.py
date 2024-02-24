@@ -21,7 +21,10 @@ class Post(models.Model):
     
     def get_like_count(self):
         return Like.objects.filter(post = self).count()
+    
 
+    def get_bookmark_count(self):
+        return Bookmark.objects.filter(post=self).count()
     
 
     
@@ -56,3 +59,13 @@ class Like(models.Model):
 
     def __str__(self) -> str:
         return f"{self.user.username} liked {self.post.id}"
+    
+
+
+
+class Bookmark(models.Model):
+    user = models.ForeignKey(User , on_delete=models.CASCADE)
+    post = models.ForeignKey(Post , on_delete=models.CASCADE)
+
+    def __str__(self) -> str:
+        return f"{self.post.id} saved by {self.user.username}"
