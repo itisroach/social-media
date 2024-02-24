@@ -2,6 +2,7 @@
 
 {% block content %}
 {% load static %}
+{% load likedByUser %}
 <style>
     ::-webkit-scrollbar {
         width: 5px;
@@ -55,7 +56,7 @@
         </a>
             
             <button class="bg-blue-400 w-48 mt-5 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-full">
-            Tweet
+            Post
           </button>
       </nav>
           
@@ -65,13 +66,21 @@
           <div>
             <img class="inline-block h-10 w-10 rounded-full" src="{{user.profile.url}}" alt="" />
           </div>
-          <div class="ml-3">
-            <p class="text-base leading-6 font-medium text-white">
-              {{user.name}}
-            </p>
-            <p class="text-sm leading-5 font-medium text-gray-400 group-hover:text-gray-300 transition ease-in-out duration-150">
-              @{{user.username}}
-            </p>
+          <div class="ml-3 flex justify-center items-center gap-10">
+            <div>
+              <p class="text-base leading-6 font-medium text-white">
+                {{user.name}}
+              </p>
+              <p class="text-sm leading-5 font-medium text-gray-400 hover:text-gray-300 transition ease-in-out duration-150">
+                @{{user.username}}
+              </p>
+            </div>
+            <div>
+              <form action="{% url 'logout-user' %}" method="post">
+                {% csrf_token %}
+                <button class="px-4 py-2 bg-red-600 hover:bg-red-800 text-white rounded-full" type="submit">Logout</button>
+              </form>
+            </div>
           </div>
         </div>
       </a>
@@ -95,48 +104,48 @@
             </div>
 
             <hr class="border-gray-600">
-            <!--middle creat tweet-->
-            <div class="flex">
-                <div class="m-2 w-10 py-1">
-                    <img class="inline-block h-10 w-10 rounded-full" src="{{user.profile.url}}" alt="" />
-                </div>
-                <div class="flex-1 px-2 pt-2 mt-2">
-                    <textarea class="outline-none resize-none bg-transparent text-white font-medium text-lg w-full" rows="2" cols="50" placeholder="What's happening?"></textarea>
-                    <div class="parent-for-preview -m-1 flex flex-wrap md:-m-2 px-10 justify-center">
-                      
-                    </div>
-                </div>                    
-            </div>
+            
             <!--middle creat tweet below icons-->
-            <form action="tweet/" enctype="multipart/form-data" method="post" class="flex tweet-form">
+            <form action="post/" enctype="multipart/form-data" method="post" class="flex flex-col post-form">
+              
+              {% csrf_token %}
+              <!--middle creat tweet-->
+                <div class="flex">
+                  <div class="m-2 w-10 py-1">
+                      <img class="inline-block h-10 w-10 rounded-full" src="{{user.profile.url}}" alt="" />
+                  </div>
+                  <div class="flex-1 px-2 pt-2 mt-2">
+                      <textarea name="caption" class="outline-none resize-none bg-transparent text-white font-medium text-lg w-full" rows="2" cols="50" placeholder="What's happening?"></textarea>
+                      <div class="parent-for-preview -m-1 max-w-[500px] flex w-[500px] md:-m-2 justify-center">
+                        
+                      </div>
+                  </div>                    
+                </div>
+                <br>
                 <div class="w-10"></div>
 
-                <div class="w-44 px-2">
+                <div class="w-44 px-2 flex">
                     
                     <div class="flex items-center">
                         <div class="flex justify-center items-center text-center px-1 py-1 m-2">
-                            <label for="media" href="#" class="mt-1 group flex items-center text-gray-400 px-2 py-2 text-base leading-6 font-medium rounded-full hover:bg-gray-800 hover:text-gray-300">
-                                <svg class="text-center h-7 w-6" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" stroke="currentColor" viewBox="0 0 24 24"><path d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                            <label for="media" href="#" class="mt-1 group media-icon flex items-center text-gray-400 px-2 py-2 text-base leading-6 font-medium rounded-full hover:bg-gray-800 hover:text-gray-300">
+                                <svg class="text-center  h-7 w-6" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" stroke="currentColor" viewBox="0 0 24 24"><path d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
                             </label>
                             <input multiple="multiple" class="hidden media" onchange="preview(this)" type="file" name="file" id="media"/>
                         </div>
-
-                        <div class="flex justify-center items-center text-center py-2 m-2">
-                            <a href="#" class="mt-1 group flex items-center text-gray-400 px-2 py-2 text-base leading-6 font-medium rounded-full hover:bg-gray-800 hover:text-gray-300">
-                            <svg class="text-center h-7 w-6" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" stroke="currentColor" viewBox="0 0 24 24"><path d="M14.828 14.828a4 4 0 01-5.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                        </a>
-                        </div>
+                        
                     </div>
+                    <div class="flex-1">
+                      <button type="submit" class="bg-blue-400 mt-5 ml-[450px] hover:bg-blue-600 text-white font-bold py-2 px-8 rounded-full mr-8 float-right">
+                          Post
+                        </button>
+                  </div>
                 </div>
 
-                <div class="flex-1">
-                    <button type="submit" class="bg-blue-400 mt-5 hover:bg-blue-600 text-white font-bold py-2 px-8 rounded-full mr-8 float-right">
-                        Tweet
-                      </button>
-                </div>
+                
             </form>
 
-            <hr class="border-gray-800 border-4">
+            <hr class="border-gray-600 border-2">
 
             
         <div>
@@ -163,7 +172,7 @@
               </div>
             </a>
         </div>
-        <div class="pl-16">
+        <div class="pl-16 pr-10">
             <p class="text-base width-auto mb-2 text-white flex-shrink">
               {{post.caption}}
             </p>
@@ -171,15 +180,22 @@
             
             <!-- grid gallery -->
             {% if post.get_media %}
-            <div class="container px-10 py-2">
-              <div class="-m-1 flex flex-wrap md:-m-2 justify-center">
+            <div class="container px-5 py-2">
+              <div class="-m-1 max-w-[500px] flex w-[500px] md:-m-2 justify-center">
                 {% for media in post.get_media %}
-                <div class="flex m-1 flex-wrap cursor-pointer">
-                  <div class="w-full">
-                    <img
-                      alt="gallery"
-                      class="block h-44 w-44 rounded-lg object-cover object-center"
-                      src="{{media}}" />
+                <div class="flex relative w-auto h-auto m-0.5 flex-wrap cursor-pointer">
+                  <div class="w-full w-auto h-auto">
+                    {% if media.get_type == "img" %}
+                      <img
+                        alt="gallery"
+                        class="h-full w-auto h-auto rounded-lg object-cover object-center"
+                        src="{{media}}" />
+                    {% else %}
+                      <video loop class="h-full w-auto h-auto rounded-lg object-cover object-center" controls>
+                        <source src="{{media}}" />
+                      </video>
+
+                    {% endif %}
                   </div>             
                 </div>
                 {% endfor %}
@@ -193,16 +209,20 @@
                     
                     <div class="flex items-center pl-16">
                         <div class="flex-1 text-center">
-                            <a href="#" class="w-12 mt-1 group flex items-center text-gray-500 px-3 py-2 text-base leading-6 font-medium rounded-full hover:bg-gray-800 hover:text-gray-300">
+                            <button type="submit" class="w-12 mt-1 group flex items-center text-gray-500 px-3 py-2 text-base leading-6 font-medium rounded-full hover:bg-gray-800 hover:text-gray-300">
                                 <svg class="text-center h-6 w-6" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" stroke="currentColor" viewBox="0 0 24 24"><path d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path></svg>
-                              </a>
+                              </button>
                         </div>
 
-                        <div class="flex-1 text-center py-2 m-2">
-                            <a href="#" class="w-12 mt-1 group flex items-center text-gray-500 px-3 py-2 text-base leading-6 font-medium rounded-full hover:bg-gray-800 hover:text-gray-300">
-                                <svg class="text-center h-7 w-6" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" stroke="currentColor" viewBox="0 0 24 24"><path d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path></svg>
-                            </a>
-                        </div>
+                        <form method="post" action="{% url 'like-post' pk=post.id %}" class="flex-1 text-center py-2 m-2">
+                          {% csrf_token %}  
+                          {% liked user post as likedBefore %}
+                          <button type="submit" class="w-12 mt-1 group flex flex-col items-center {% if likedBefore == True %} text-red-500 {% else %} text-gray-500 {% endif %} px-3 py-2 text-base leading-6 font-medium rounded-full hover:bg-gray-800 hover:text-gray-300">
+                                <svg class="text-center h-7 w-6" fill="{% if likedBefore %} red {% else %} none {% endif %}" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" stroke="currentColor" viewBox="0 0 24 24"><path d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path></svg>
+                                <p>{{post.get_like_count}}</p>
+                          </button>
+                          
+                        </form>
                         <div class="flex-1 text-center py-2 m-2">
                             <a href="#" class="w-12 mt-1 group flex items-center text-gray-500 px-3 py-2 text-base leading-6 font-medium rounded-full hover:bg-gray-800 hover:text-gray-300">
                               <svg class="text-center h-7 w-6" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" stroke="currentColor" viewBox="0 0 24 24"><path d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z"></path></svg>
