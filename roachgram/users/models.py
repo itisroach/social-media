@@ -17,6 +17,20 @@ class User(AbstractUser):
     def __str__(self):
         return self.username
     
+    def get_followers_and_followings_count(self):
+        followersCount = FollowUser.objects.filter(following=self).count()
+        followingsCount = FollowUser.objects.filter(follower=self).count()
+
+        return {
+            "followersCount": followersCount,
+            "followingsCount": followingsCount
+        }
+    
+    def get_all_user_posts(self):
+        from feeds.models import Post  
+        return Post.objects.filter(user=self).order_by("-createdAt")
+    
+    
 
 class FollowUser(models.Model):
     follower = models.ForeignKey(User , on_delete=models.CASCADE , related_name="followers")
