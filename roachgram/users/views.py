@@ -33,17 +33,11 @@ def userPage(request , username):
     if request.user.is_authenticated:
         # checks for user if it's following 
         isFollowing = FollowUser.objects.filter(follower=request.user, following = user).exists()
-    
-    # get number of followers and number of followings
-    followersCount = FollowUser.objects.filter(following=user).count()
-    followingsCount = FollowUser.objects.filter(follower=user).count()
 
     context = {
         "account": user,
         "htmlTitle": f"{username}'s Page",
         "isFollowingTheUser": isFollowing,
-        "followersCount": followersCount,
-        "followingsCount": followingsCount
     }
 
     return render(request , "userPage.html" , context)
@@ -64,7 +58,6 @@ def followUser(request , username):
     # checks for user if it's already following
     isFollowing = FollowUser.objects.filter(follower=request.user, following = user).exists()
 
-    print(isFollowing)
 
     if (isFollowing):
         messages.error(request , f"you already following @{user.username}")
