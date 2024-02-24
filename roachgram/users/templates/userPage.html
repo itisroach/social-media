@@ -3,84 +3,75 @@
 
 {% block content %}
 
-
-<div class="max-w-2xl mx-auto">
-
-    <div class="px-3 py-2">
-      
-        <div class="flex flex-col justify-center items-center gap-1 text-center">
-            <img class="block mx-auto bg-center bg-no-repeat bg-cover w-20 h-20 rounded-full shadow-lg" src={{ account.profile.url }}/>
-            <p class="font-sans font-semibold text-xl">@{{account.username}}</p>
-            <p class="font-sans font-semibold opacity-70">{{account.name}}</p>
-            <p class="font-sans font-semibold opacity-50">{{ account.about }}</p>
-        </div>
-
-
-   
-        <div class="flex justify-center items-center gap-2 my-3 ml-6">
-            <div class="font-semibold text-center mx-4">
-                <p class="text-black">102</p>
-                <span class="text-gray-400">Posts</span>
+<!-- User card-->
+<div class="mt-32">
+    <div class="p-4">
+        <div class="relative flex w-full">
+            <!-- Avatar -->
+            <div class="flex flex-1">
+                <div style="margin-top: -6rem;">
+                    <div style="height:9rem; width:9rem;" class="md rounded-full relative avatar">
+                        <img style="height:9rem; width:9rem;" class="md rounded-full relative" src="{{account.profile.url}}" alt="">
+                        <div class="absolute"></div>
+                    </div>
+                </div>
             </div>
-            <div class="font-semibold text-center mx-4">
-                <p class="text-black">{{followersCount}}</p>
-                <span class="text-gray-400">Followers</span>
-            </div>
-            <div class="font-semibold text-center mx-4">
-                <p class="text-black">{{followingsCount}}</p>
-                <span class="text-gray-400">Folowing</span>
-            </div>
-        </div>
-      
-
-        
-        {% if user.is_authenticated and  account.id != request.user.id %}
-            <div class="flex justify-center gap-2 my-5 ml-6">
-                {% if not isFollowingTheUser %}
-                <a href="{{account.username}}/follow/" class="bg-blue-500 w-[143px] text-center px-10 py-2 rounded-full text-white shadow-lg">Follow</a>
+            <!-- Follow Button -->
+            <div class="flex flex-col text-right">
+                {% if account.id == user.id %}
+                <button class="flex justify-center  max-h-max whitespace-nowrap focus:outline-none  focus:ring  rounded max-w-max border bg-transparent border-blue-500 text-blue-500 hover:border-blue-800 hover:border-blue-800 flex items-center hover:shadow-lg font-bold py-2 px-4 rounded-full mr-0 ml-auto">
+                    Edit Profile
+                </button>
                 {% else %}
-                <a href="{{account.username}}/unfollow/" class="bg-red-500 w-[143px] text-center px-10 py-2 rounded-full text-white shadow-lg">Unfollow</a>
+                <button class="flex justify-center  max-h-max whitespace-nowrap focus:outline-none  focus:ring  rounded max-w-max border bg-transparent border-blue-500 text-blue-500 hover:border-blue-800 hover:border-blue-800 flex items-center hover:shadow-lg font-bold py-2 px-4 rounded-full mr-0 ml-auto">
+                    Follow
+                </button>
                 {% endif %}
-                <button class="bg-white border border-gray-500 px-10 py-2 rounded-full shadow-lg">Message</button>
             </div>
-        {% endif %}
-        
-
-     
-        
-        <div class="flex justify-between items-center">
-            <button class="w-full py-2 border-b-2 border-black">
-                <svg xmlns="http://www.w3.org/2000/svg" class="mx-auto h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" />
-                  </svg>
-            </button>
-            <button class="w-full py-2">
-                <svg xmlns="http://www.w3.org/2000/svg" class="mx-auto h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M3 14h18m-9-4v8m-7 0h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
-                  </svg>
-            </button>
         </div>
 
-
-           <div class="grid grid-cols-3 gap-2 my-3 ml-32">
-                <a class="block bg-center bg-no-repeat bg-cover h-40 w-full rounded-lg" href="" style="background-image: url('https://images.pexels.com/photos/458766/pexels-photo-458766.jpeg')">dsa</a>
-                <a class="block bg-center bg-no-repeat bg-cover h-40 w-full rounded-lg" href="" style="background-image: url('https://images.pexels.com/photos/247287/pexels-photo-247287.jpeg')">dsa</a>
-                <a class="block bg-center bg-no-repeat bg-cover h-40 w-full rounded-lg" href="" style="background-image: url('https://images.pexels.com/photos/6169/woman-hand-girl-professional.jpg')">dsad</a>
-
-                <a class="block bg-center bg-no-repeat bg-cover h-40 w-full rounded-lg" href="" style="background-image: url('https://images.pexels.com/photos/3851790/pexels-photo-3851790.jpeg')"></a>
-                <a class="block bg-center bg-no-repeat bg-cover h-40 w-full rounded-lg" href="" style="background-image: url('https://images.pexels.com/photos/3852159/pexels-photo-3852159.jpeg')"></a>
-                <a class="block bg-center bg-no-repeat bg-cover h-40 w-full rounded-lg" href="" style="background-image: url('https://images.pexels.com/photos/4491173/pexels-photo-4491173.jpeg')"></a>
-
-                <a class="block bg-center bg-no-repeat bg-cover h-40 w-full rounded-lg" href="" style="background-image: url('https://images.pexels.com/photos/2294354/pexels-photo-2294354.jpeg')"></a>
-                <a class="block bg-center bg-no-repeat bg-cover h-40 w-full rounded-lg" href="" style="background-image: url('https://images.pexels.com/photos/6019812/pexels-photo-6019812.jpeg')"></a>
-                <a class="block bg-center bg-no-repeat bg-cover h-40 w-full rounded-lg" href="" style="background-image: url('https://images.pexels.com/photos/40751/running-runner-long-distance-fitness-40751.jpeg')"></a>
-           </div>
-
+        <!-- Profile info -->
+        <div class="space-y-1 justify-center w-full mt-3 ml-3">
+            <!-- User basic-->
+            <div>
+                <h2 class="text-xl leading-6 font-bold text-white">{{account.name}}</h2>
+                <p class="text-base leading-5 font-medium text-white opacity-50">@{{account.username}}</p>
+            </div>
+            <!-- Description and others -->
+            <div class="mt-3">
+                {% if account.about %}
+                <p class="text-white leading-tight mb-2">{{account.about}}</p>
+                {% endif %}
+                <div class="text-white flex">
+                    <span class="flex mr-2 text-white opacity-50">
+                        <svg stroke="currentColor" fill="currentColor" viewBox="0 0 24 24" class="h-5 w-5 paint-icon">
+                            <g>
+                                <path d="M19.708 2H4.292C3.028 2 2 3.028 2 4.292v15.416C2 20.972 3.028 22 4.292 22h15.416C20.972 22 22 20.972 22 19.708V4.292C22 3.028 20.972 2 19.708 2zm.792 17.708c0 .437-.355.792-.792.792H4.292c-.437 0-.792-.355-.792-.792V6.418c0-.437.354-.79.79-.792h15.42c.436 0 .79.355.79.79V19.71z"></path>
+                                <circle cx="7.032" cy="8.75" r="1.285"></circle>
+                                <circle cx="7.032" cy="13.156" r="1.285"></circle>
+                                <circle cx="16.968" cy="8.75" r="1.285"></circle>
+                                <circle cx="16.968" cy="13.156" r="1.285"></circle>
+                                <circle cx="12" cy="8.75" r="1.285"></circle>
+                                <circle cx="12" cy="13.156" r="1.285"></circle>
+                                <circle cx="7.032" cy="17.486" r="1.285"></circle>
+                                <circle cx="12" cy="17.486" r="1.285"></circle>
+                            </g>
+                        </svg>
+                        <span class="leading-5 ml-1">Joined {{account.date_joined|date:"F, o"}}</span>
+                    </span>
+                </div>
+            </div>
+            <div class="pt-3 flex justify-start items-start w-full divide-x divide-white divide-solid">
+                <div class="text-center pr-3"><span class="font-bold text-white opacity-50">{{account.get_followers_and_followings_count.followingsCount}}</span><span class="text-white opacity-50"> Following</span></div>
+                <div class="text-center px-3"><span class="font-bold text-white opacity-50">{{account.get_followers_and_followings_count.followersCount}}</span><span class="text-white opacity-50"> Followers</span></div>
+            </div>
+        </div>
     </div>
-
-
-
+    <hr class="border-gray-800">
 </div>
+
+    {% include 'post.html' with feedPosts=account.get_all_user_posts %}
+
 
 
 {% endblock content %}
