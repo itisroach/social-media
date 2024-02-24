@@ -1,11 +1,9 @@
 {% load customTemplateTags %} 
-{% for post in feedPosts %}
-
 <div class="flex flex-shrink-0 p-4 pb-0">
 <a href="#" class="flex-shrink-0 group block">
 <div class="flex items-center">
   <div>
-    <img class="inline-block h-10 w-10 rounded-full" src="{{post.user.profile.url}}" alt="" />
+    <img class="inline-block h-10 aspect-square object-cover w-10 rounded-full" src="{{post.user.profile.url}}" alt="" />
   </div>
   <div class="ml-3">
     <p class="text-base leading-6 font-medium text-white">
@@ -85,4 +83,5 @@
 
 </div>
 <hr class="border-gray-600">
-{% endfor %}
+
+
