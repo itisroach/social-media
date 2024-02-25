@@ -1,5 +1,6 @@
 from typing import Any
 from django.db.models.query import QuerySet
+from django.contrib import messages
 from django.shortcuts import render , redirect , get_object_or_404
 from users.models import User , FollowUser
 from django.db.models import Q
@@ -7,6 +8,7 @@ from .models import Post , Media , Like , Bookmark
 from django.contrib.auth.decorators import login_required
 from django.views.generic import ListView
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.views.decorators.http import require_http_methods
 
 # Create your views here.
 @login_required()
@@ -50,19 +52,20 @@ def likePost(request , pk):
             Like.objects.create(post=post , user=request.user)
     return redirect("home-page")
 
+@require_http_methods(["POST"])
 @login_required()
 def bookmarkPost(request , pk):
     post = Post.objects.get(id=pk)
 
-    if request.method == "POST":
-        bookmarkedBefore = Bookmark.objects.filter(post=post , user=request.user)
 
-        if bookmarkedBefore.exists():
-            bookmarkedBefore.delete()
-        else:
-            Bookmark.objects.create(user=request.user , post=post)
+    bookmarkedBefore = Bookmark.objects.filter(post=post , user=request.user)
 
-        return redirect("home-page")
+    if bookmarkedBefore.exists():
+        bookmarkedBefore.delete()
+    else:
+        Bookmark.objects.create(user=request.user , post=post)
+
+    return redirect("home-page")
     
 
 class GetAllBookmarks(LoginRequiredMixin , ListView):
@@ -71,3 +74,16 @@ class GetAllBookmarks(LoginRequiredMixin , ListView):
     template_name = "bookmark.html"
     def get_queryset(self) -> QuerySet[Any]:
         return Bookmark.objects.filter(user=self.request.user).order_by("-createdAt")
+    
+
+@require_http_methods(["POST"])
+def deletePost(request , pk):
+    post = Post.objects.get(id=pk)
+    
+    if post.user.id != request.user.id:
+        messages.error(request , "You Can Not Delete Someone Else's Post")
+        return redirect("home-page")
+    
+    post.delete()
+    messages.success(request , "Post Deleted Successfully")
+    return redirect("home-page")
