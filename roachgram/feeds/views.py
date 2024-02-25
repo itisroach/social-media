@@ -4,40 +4,69 @@ from django.contrib import messages
 from django.shortcuts import render , redirect , get_object_or_404
 from users.models import User , FollowUser
 from django.db.models import Q
-from .models import Post , Media , Like , Bookmark
+from .models import Post , Media , Like , Bookmark , Comment
 from django.contrib.auth.decorators import login_required
-from django.views.generic import ListView
+from django.views.generic import ListView , DetailView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.decorators.http import require_http_methods
 
 # Create your views here.
 @login_required()
 def home(request):
-    feedPosts = Post.objects.filter(
-                Q(user=request.user) |
-                Q(user__in=FollowUser.objects.filter(
-                    follower=request.user
-                ).values_list('following'))
-                ).order_by("-createdAt")
+    condition1 = Q(user=request.user)
+    condition2 = Q(user__in=FollowUser.objects.filter(follower=request.user).values_list('following'))
+    condition3 = Q(isReply=False)
+    feedPosts = Post.objects.filter((condition1 | condition2) & condition3).order_by("-createdAt")
     context = {
         "feedPosts": feedPosts
     }
 
     return render(request , "home.html" , context)
 
+@require_http_methods(["POST"])
 @login_required()
 def post(request):
-    if request.method == "POST":
-        # print(request.POST)
-        post = Post(user=request.user , caption=request.POST["caption"])
-        post.save()
-        files = request.FILES.getlist("file")
-        for file in files:
-            f = Media(post=post , file=file)
-            f.save()
-        return redirect("home-page")
+    # print(request.POST)
+    post = Post(user=request.user , caption=request.POST["caption"])
+    post.save()
+    files = request.FILES.getlist("file")
+    for file in files:
+        f = Media(post=post , file=file)
+        f.save()
+    return redirect("home-page")
         
+@require_http_methods(["POST"])
+def comment(request , pk):
+    post = Post.objects.get(id=pk)
 
+    if post is None:
+        messages.error(request , "Post Not Found")
+        return redirect("home-page")
+
+    comment = Comment.objects.create(repliedTo=post , user=request.user , caption=request.POST["caption"], isReply=True)
+
+    files = request.FILES.getlist("file")
+
+    for file in files:
+        f = Media.objects.create(post=comment , file=file)
+    return redirect('single-post-page' , post.id)
+
+@require_http_methods(["GET"])
+def singlePost(request , pk):
+    post = Post.objects.get(id=pk)
+
+    if post is None:
+        messages.error(request , "Post Not Found")
+        return redirect("home-page")
+    
+    comments = post.post_replied_to.all()
+
+    context = {
+        "post": post,
+        "comments": comments
+    }
+
+    return render(request , "singlePost.html" , context)
 
 @login_required()
 def likePost(request , pk):
