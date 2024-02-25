@@ -10,5 +10,8 @@ urlpatterns = [
     # auth routes
     path("register" , views.registeration , name="register-user"),
     path("login" , authViews.LoginView.as_view(template_name="login.html" , redirect_authenticated_user=True) , name="login-user"),
-    path("logout" , authViews.LogoutView.as_view() , name="logout-user")
+    path("logout" , authViews.LogoutView.as_view() , name="logout-user"),
+
+    # profile route
+    path("profile/",  views.updateUser , name="update-user")
 ]
