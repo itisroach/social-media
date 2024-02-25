@@ -8,6 +8,7 @@ urlpatterns = [
     path("post/" , views.post , name="post"),
     path("<int:pk>/like" , views.likePost , name="like-post"),
     path("<int:pk>/bookmark" , views.bookmarkPost , name="bookmark-post"),
-    path("mybookmarks/" , views.GetAllBookmarks.as_view() , name="bookmark-page")
+    path("mybookmarks/" , views.GetAllBookmarks.as_view() , name="bookmark-page"),
+    path("posts/<int:pk>/delete/" , views.deletePost , name="delete-post")
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
