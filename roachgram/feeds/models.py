@@ -9,6 +9,7 @@ def mediaDirectory(instance , filename):
 class Post(models.Model):
     user      = models.ForeignKey(User , on_delete=models.CASCADE , related_name="creator")
     caption   = models.TextField(max_length=512)
+    isReply   = models.BooleanField(default=False)
     createdAt = models.DateTimeField(auto_now_add=True)
     updatedAt = models.DateTimeField(auto_now=True)
 
@@ -19,12 +20,15 @@ class Post(models.Model):
     def get_media(self):
         return Media.objects.filter(post = self.id)
     
+
     def get_like_count(self):
-        return Like.objects.filter(post = self).count()
+        return self.post.count()
     
+    def get_comments_count(self):
+        return self.post_replied_to.count()
 
     def get_bookmark_count(self):
-        return Bookmark.objects.filter(post=self).count()
+        return self.bookmark_set.count()
     
 
     
@@ -74,3 +78,8 @@ class Bookmark(models.Model):
 
     def __str__(self) -> str:
         return f"{self.post.id} saved by {self.user.username}"
+    
+
+
+class Comment(Post , models.Model):
+    repliedTo = models.ForeignKey(Post , on_delete=models.CASCADE , related_name="post_replied_to")
