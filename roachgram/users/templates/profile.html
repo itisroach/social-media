@@ -1,0 +1,46 @@
+{% extends 'main.html' %}
+{% load static %}
+{% load tailwind_filters %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+<style>
+    #id_name{
+        color: white;
+        background-color: transparent;
+    }
+    #id_username{
+        color: white;
+        background-color: transparent;
+    }
+    #id_email{
+        color: white;
+        background-color: transparent;
+    }
+    #id_about{
+        color: white;
+        background-color: transparent;
+    }
+    small{
+        
+    }
+</style>
+<script>
+    const previewProfile = (e) => {
+        const file = e.files[0]
+  
+
+
+        const blob = URL.createObjectURL(file)     
+        const profile = document.querySelector(".profile")  
+        profile.src = blob
+}
+</script>
+<form enctype="multipart/form-data" method="post" class="flex pt-10 flex-col justify-center items-center" action="">
+    <label for="id_profile" class="cursor-pointer">
+        <img style="height:9rem; width:9rem;" id="profile" class="md profile rounded-full aspect-square object-cover relative" src="{{user.profile.url}}" alt="">
+    </label>
+    {% csrf_token %}
+    {% crispy form %}
+</form>
+{% endblock content %}
