@@ -2,7 +2,7 @@ from django.shortcuts import render , redirect
 from django.contrib.auth.decorators import login_required 
 from .models import User , FollowUser
 from django.contrib import messages
-from .forms import RegisterForm
+from .forms import RegisterForm , UpdateUserForm
 from django.contrib.auth import login
 
 def registeration(request):
@@ -41,6 +41,21 @@ def userPage(request , username):
     }
 
     return render(request , "userPage.html" , context)
+
+
+@login_required()
+def updateUser(request):
+    if request.method == "POST":
+        form = UpdateUserForm(request.POST, request.FILES , instance=request.user)
+        
+        if form.is_valid():
+            form.save()
+            messages.success(request , "You Profile Changed Successfullly")
+    
+    else:
+        form = UpdateUserForm(instance=request.user)
+    
+    return render(request , "profile.html" , { "form": form })
 
 @login_required()
 def followUser(request , username):
