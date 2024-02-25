@@ -28,16 +28,10 @@ def registeration(request):
 def userPage(request , username):
     user = User.objects.get(username = username)
 
-    # make this statement login required
-    isFollowing = False
-    if request.user.is_authenticated:
-        # checks for user if it's following 
-        isFollowing = FollowUser.objects.filter(follower=request.user, following = user).exists()
 
     context = {
         "account": user,
-        "htmlTitle": f"{username}'s Page",
-        "isFollowingTheUser": isFollowing,
+        "htmlTitle": f"{username}'s Page"
     }
 
     return render(request , "userPage.html" , context)
