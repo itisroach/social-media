@@ -1,5 +1,5 @@
 {% extends "main.html" %}
-
+{% load customTemplateTags %}
 
 {% block content %}
 
@@ -23,6 +23,7 @@
                         Edit Profile
                     </button>
                 {% else %}
+                    {% followedTheUser request.user account as isFollowingTheUser %}
                     {% if isFollowingTheUser %}
                         <form method="post" action="{% url 'unfollow-user' account.username %}">
                             {% csrf_token %}
