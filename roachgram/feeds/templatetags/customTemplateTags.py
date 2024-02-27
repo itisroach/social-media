@@ -2,6 +2,7 @@ from django import template
 from ..models import Like , Bookmark
 from users.models import FollowUser
 from django.template.defaultfilters import stringfilter
+import re
 
 register = template.Library()
 
@@ -26,9 +27,9 @@ def followedTheUser(follower , following):
     return True if FollowUser.objects.filter(follower=follower , following=following) else False
 
 
-@register.simple_tag
-def userSuggestion(user):
-    likedByUser = Like.objects.filter(user=user)[0]
-    otherUsers = Like.objects.filter(user__in=Like.objects.filter(post=likedByUser.post).values_list("user").exclude(user=user))[:2]
 
-    return otherUsers
+@register.filter(name="findMention" , is_safe=True)
+@stringfilter
+def findMention(caption: str):
+    caption = re.sub(r'@(\w+)', r'<a class="text-blue-400" href="/users/@\1">@\1</a>', caption)
+    return caption
