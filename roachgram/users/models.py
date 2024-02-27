@@ -1,6 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
-import datetime
+import auto_prefetch
 # Create your models here.
 
 def user_profile_directory(instance , filename):
@@ -30,11 +30,12 @@ class User(AbstractUser):
         from feeds.models import Post  
         return Post.objects.filter(user=self).order_by("-createdAt")
     
-    
+    def get_by_natural_key(self, username):
+        return self.get(username__iexact=username)
 
 class FollowUser(models.Model):
-    follower = models.ForeignKey(User , on_delete=models.CASCADE , related_name="followers")
-    following = models.ForeignKey(User , on_delete=models.CASCADE , related_name="followings")
+    follower = auto_prefetch.ForeignKey(User , on_delete=models.CASCADE , related_name="followers")
+    following = auto_prefetch.ForeignKey(User , on_delete=models.CASCADE , related_name="followings")
     createdAt = models.TimeField(auto_now_add=True , blank=True , null=True)
     updatedAt = models.TimeField(auto_now=True , blank=True , null=True)
 
