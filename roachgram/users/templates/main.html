@@ -79,13 +79,6 @@
                 </a>
             </button>
         <button onclick="clickedOnRoutButton(this.children)">
-            <a id="explore" href="#" class="mt-1 group flex items-center route px-2 py-2 text-base leading-6 font-semibold rounded-full hover:bg-gray-800 hover:text-gray-300">
-                <svg class="mr-4 h-6 w-6" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" stroke="currentColor" viewBox="0 0 24 24"><path d="M7 20l4-16m2 16l4-16M6 9h14M4 15h14"></path></svg>
-                
-                Explore
-            </a>
-        </button>
-        <button onclick="clickedOnRoutButton(this.children)">
             <a id="messages" href="#" class="mt-1 group flex items-center route px-2 py-2 text-base leading-6 font-medium rounded-full hover:bg-gray-800 hover:text-gray-300">
                 <svg class="mr-4 h-6 w-6" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" stroke="currentColor" viewBox="0 0 24 24"><path d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
                 Messages
@@ -109,8 +102,8 @@
           </button>
       </nav>
           
-    <div class="flex-shrink-0 flex hover:bg-gray-00 justify-center items-c rounded-full p-4 mt-12 mr-2">
-      <a href="#" class="flex-shrink-0 group block">
+    <div class="flex-shrink-0 absolute left-28 flex hover:bg-gray-00 justify-center items-c rounded-full p-4 mt-12 mr-2">
+      <a href="{% url 'user-page' username=user.username %}" class="flex-shrink-0 group block">
         <div class="flex items-center">
           <div>
             <img class="inline-block h-10 w-10 aspect-square object-cover rounded-full" src="{{user.profile.url}}" alt="" />
@@ -155,7 +148,7 @@
                     </svg>
                   </button>
 
-                <input type="search" name="search" placeholder="Search Twitter" class="bg-gray-800 h-10 px-10 pr-5 w-full rounded-full text-sm focus:outline-none bg-purple-white shadow rounded border-0">
+                <input type="search" name="search" placeholder="Search . . ." class="bg-gray-800 h-10 px-10 pr-5 w-full rounded-full text-sm focus:outline-none bg-purple-white shadow rounded border-0">
                 
             </div>
     
@@ -172,28 +165,26 @@
                     <!--first person who to follow--> 
                     
                 
-                    {% userSuggestion user as suggestedUsers %}
-                    {% for userToFollow in suggestedUsers %}
                     <div class="flex flex-shrink-0 py-3">
                       <div class="flex-1 ">
                         <div class="flex items-center w-48">
                             <div>
-                              <img class="inline-block h-10 w-auto rounded-full ml-4 mt-2" src="{{userToFollow.user.profile.url}}" alt="" />
+                              <img class="inline-block h-10 w-auto rounded-full ml-4 mt-2" src="" alt="" />
                             </div>
-                            <div class="ml-3 mt-3">
+                            <a href="" class="ml-3 mt-3">
                               <p class="text-base leading-6 font-medium text-white">
-                                {{userToFollow.user.name}}
+                                tezt
                               </p>
                               <p class="text-sm leading-5 font-medium text-gray-400 group-hover:text-gray-300 transition ease-in-out duration-150">
-                                @{{userToFollow.user.username}}
+                                @tets
                               </p>
-                            </div>
+                            </a>
                           </div>
                         
                       </div>
                       <div class="flex-1 px-4 py-2 m-2">
                         <a href="" class=" float-right">
-                          <a href="{% url 'follow-user' username=userToFollow.user.username %}" class="bg-transparent hover:bg-gray-500 text-white font-semibold hover:text-white py-2 px-4 border border-white hover:border-transparent rounded-full">
+                          <a href="" class="bg-transparent hover:bg-gray-500 text-white font-semibold hover:text-white py-2 px-4 border border-white hover:border-transparent rounded-full">
                             Follow
                           </a>  
                         </a>
@@ -201,34 +192,9 @@
                       </div>
                     </div>
                     <hr class="border-gray-600">
-                    {% endfor %}
-                    
-  
 
-               
-
-                <!--show more-->
-
-                <div class="flex">
-                    <div class="flex-1 p-4">
-                        <h2 class="px-4 ml-2 w-48 font-bold text-gray-400">Show more</h2>  
-                    </div>
-                </div>
-
-        <div class="flow-root m-6 inline">
-            <div class="flex-1">
-                <a href="#">
-                <p class="text-sm leading-6 font-medium text-gray-500">Terms Privacy Policy Cookies Imprint Ads info</p>
-                  </a>
-                </div>
-            <div class="flex-2">
-                <p class="text-sm leading-6 font-medium text-gray-600"> © 2020 Twitter, Inc.</p>
-            </div>
-            </div>
-    </div>
-
-</div>
         </div>
+      </div>
     
 </div>
 
