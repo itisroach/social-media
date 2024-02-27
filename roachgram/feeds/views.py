@@ -9,12 +9,12 @@ from django.contrib.auth.decorators import login_required
 from django.views.generic import ListView , DetailView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.decorators.http import require_http_methods
-
+from bleach import clean
 # Create your views here.
 @login_required()
 def home(request):
     condition1 = Q(user=request.user)
-    condition2 = Q(user__in=FollowUser.objects.filter(follower=request.user).values_list('following'))
+    condition2 = Q(post__in=FollowUser.objects.filter(follower=request.user).values_list('following'))
     condition3 = Q(isReply=False)
     feedPosts = Post.objects.filter((condition1 | condition2) & condition3).order_by("-createdAt")
     context = {
@@ -27,7 +27,7 @@ def home(request):
 @login_required()
 def post(request):
     # print(request.POST)
-    post = Post(user=request.user , caption=request.POST["caption"])
+    post = Post(user=request.user , caption=clean(request.POST["caption"]))
     post.save()
     files = request.FILES.getlist("file")
     for file in files:
@@ -43,7 +43,7 @@ def comment(request , pk):
         messages.error(request , "Post Not Found")
         return redirect("home-page")
 
-    comment = Comment.objects.create(repliedTo=post , user=request.user , caption=request.POST["caption"], isReply=True)
+    comment = Comment.objects.create(repliedTo=post , user=request.user , caption=clean(request.POST["caption"]), isReply=True)
 
     files = request.FILES.getlist("file")
 
@@ -79,7 +79,7 @@ def likePost(request , pk):
             likedBefore.delete()
         else:
             Like.objects.create(post=post , user=request.user)
-    return redirect("home-page")
+    return redirect("single-post-page" , post.id)
 
 @require_http_methods(["POST"])
 @login_required()
@@ -94,7 +94,7 @@ def bookmarkPost(request , pk):
     else:
         Bookmark.objects.create(user=request.user , post=post)
 
-    return redirect("home-page")
+    return redirect("bookmark-page")
     
 
 class GetAllBookmarks(LoginRequiredMixin , ListView):
