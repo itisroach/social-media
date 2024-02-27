@@ -50,7 +50,7 @@
 </div>
 <div class="pl-6 mt-1 pr-10">
 <p class="text-base width-auto mb-2 text-white flex-shrink">
-{{post.caption}}
+{{post.caption|findMention|safe}}
 </p>
 
 
@@ -59,7 +59,7 @@
 <div class="container px-5 py-2">
 <div class="-m-1 max-w-[500px] flex w-[500px] md:-m-2 justify-center">
   {% for media in post.get_media %}
-  <div class="flex relative w-auto h-auto m-0.5 flex-wrap cursor-pointer">
+  <div class="flex relative w-1/2 h-auto m-0.5 flex-wrap cursor-pointer">
     <div class="w-full w-auto h-auto">
       {% if media.get_type == "img" %}
         <img
@@ -165,7 +165,7 @@
 
     {% for comment in comments %}
         
-        {% include 'post.html' with post=comment %}
+      {% include 'post.html' with post=comment %}
 
     {% endfor %}
 {% endblock content %}
