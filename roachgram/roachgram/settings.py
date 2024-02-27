@@ -26,7 +26,7 @@ SECRET_KEY = 'django-insecure-2_ws!k#=akz$pe^2)sdv4ohpho*n7xxygaq40npx-w%_)glvn1
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["localhost"]
 
 
 # Application definition
@@ -41,7 +41,8 @@ INSTALLED_APPS = [
     'users.apps.UsersConfig',
     'feeds.apps.FeedsConfig',
     "crispy_forms",
-    "crispy_tailwind"
+    "crispy_tailwind",
+    "bleach",
 ]
 
 MIDDLEWARE = [
@@ -59,8 +60,7 @@ ROOT_URLCONF = 'roachgram.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
-        'APP_DIRS': True,
+        'DIRS': [os.path.join(BASE_DIR, 'templates')],
         'OPTIONS': {
             'context_processors': [
                 'django.template.context_processors.debug',
@@ -68,6 +68,11 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
             ],
+            'loaders': [
+            ('django.template.loaders.cached.Loader', [
+                'django.template.loaders.filesystem.Loader',
+                'django.template.loaders.app_directories.Loader',
+            ])],
         },
     },
 ]
