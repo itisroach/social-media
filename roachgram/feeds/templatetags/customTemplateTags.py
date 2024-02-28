@@ -1,6 +1,6 @@
 from django import template
 from ..models import Like , Bookmark
-from users.models import FollowUser
+from users.models import FollowUser , User
 from django.template.defaultfilters import stringfilter
 import re
 
@@ -33,3 +33,8 @@ def followedTheUser(follower , following):
 def findMention(caption: str):
     caption = re.sub(r'@(\w+)', r'<a class="text-blue-400" href="/users/@\1">@\1</a>', caption)
     return caption
+
+
+@register.simple_tag
+def suggestedUsers(user):
+    return User.objects.filter().exclude(username=user.username).order_by("-date_joined")[:2]
