@@ -27,8 +27,7 @@ def removeDir(path):
 # when user account deleted all of its uploads gets deleted
 @receiver(pre_delete , sender=User)
 def on_user_delete(sender , instance , **kwargs):
-    if (instance.profile != "default-profile.png"):
-        removeDir(f"uploads/{instance.username}")
+    removeDir(f"uploads/{instance.username}")
 
 
 def deleteFile(path):
