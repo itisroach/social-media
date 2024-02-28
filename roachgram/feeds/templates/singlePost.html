@@ -90,11 +90,12 @@
   <div class="w-full py-0">
       
       <div class="flex items-center pl-24">
-          <div class="flex-1 text-center">
-              <button type="submit" class="w-12 group flex items-center text-gray-500 px-3 py-2 text-base leading-6 font-medium rounded-full hover:bg-gray-800 hover:text-gray-300">
-                  <svg class="text-center h-6 w-6" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" stroke="currentColor" viewBox="0 0 24 24"><path d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path></svg>
-                </button>
-          </div>
+        <a href="{% url 'single-post-page' pk=post.id %}" class="flex-1 text-center">
+          <button type="submit" class="w-12 flex flex-col justify-center items-center mt-1 group flex items-center text-gray-500 px-3 py-2 text-base leading-6 font-medium rounded-full hover:bg-gray-800 hover:text-gray-300">
+              <svg class="text-center h-6 w-6" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" stroke="currentColor" viewBox="0 0 24 24"><path d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path></svg>
+              <p>{{post.get_comments_count}}</p>
+            </button>
+        </a>
 
           <form method="post" action="{% url 'like-post' pk=post.id %}" class="flex-1 text-center py-2 m-2">
             {% csrf_token %}  
