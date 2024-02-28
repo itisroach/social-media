@@ -1,6 +1,7 @@
 from django.db import models
 from users.models import User
 import os
+from PIL import Image
 import auto_prefetch
 # Create your models here.
 
@@ -39,7 +40,17 @@ class Post(models.Model):
 
 class Media(models.Model):
     post  = auto_prefetch.ForeignKey(Post , on_delete=models.CASCADE , related_name="post_media")
-    file = models.FileField(upload_to=mediaDirectory , blank=True , null=True)
+    file = models.ImageField(upload_to=mediaDirectory , blank=True , null=True)
+
+
+    def save(self , *arg, **kwargs):
+        super().save()
+        image = Image.open(self.file)
+        if image.width > 200 and image.height > 200:
+            imageSize = (500 , 500)
+            resizedImage = image.resize(imageSize)
+
+            resizedImage.save(self.file.path , "JPEG" , optimize=True)
 
 
     def __str__(self) -> str:
