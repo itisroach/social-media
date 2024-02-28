@@ -1,0 +1,40 @@
+{% extends 'main.html' %}
+{% load customTemplateTags %}
+
+{% block content %}
+
+<h1 class="text-2xl font-semibold text-center text-white">Founded Users</h1>
+{% for foundedUser in users %}
+<div class="flex justify-between px-10 py-10 items-center text-white gap-2">
+    
+    <a href="{% url 'user-page' username=foundedUser.username %}" class="flex justify-center items-center gap-2">
+        <img class="aspect-square w-14 rounded-full object-cover" src="{{foundedUser.profile.url}}" alt="">
+        <div class="flex flex-col ">
+            <p>{{ foundedUser.name }}</p>
+            <p class="opacity-50">@{{ foundedUser.username }}</p>
+        </div>
+    </a>
+
+    {% if user.is_authenticated %}
+        {% followedTheUser user foundedUser as isFollowingTheUser %}
+        {% if isFollowingTheUser %}
+        <form class="-ml-16" action="{% url 'follow-user' username=foundedUser.username %}">
+            <button class="px-8 w-32 py-0.5 font-medium bg-white text-black rounded-full" type="submit">
+                Follow
+            </button>
+        </form>
+        {% else %}
+
+        <form class="" action="{% url 'unfollow-user' username=foundedUser.username %}">
+            <button class="px-8 w-32 py-0.5 font-medium bg-transparent text-white border-2 border-gray-600 rounded-full" type="submit">
+                Unfollow
+            </button>
+        </form>
+
+        {% endif %}
+    {% endif %}
+    
+</div>
+<hr class="border-gray-600">
+{% endfor %}
+{% endblock %}
