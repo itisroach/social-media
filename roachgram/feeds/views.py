@@ -10,25 +10,51 @@ from django.views.generic import ListView , DetailView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.decorators.http import require_http_methods
 from bleach import clean
+
+
+
+
 # Create your views here.
+@require_http_methods(['GET'])
 @login_required()
 def home(request):
+    
     condition1 = Q(user=request.user)
-    condition2 = Q(post__in=FollowUser.objects.filter(follower=request.user).values_list('following'))
+    condition2 = Q(user__in=FollowUser.objects.filter(follower=request.user).values_list('following'))
     condition3 = Q(isReply=False)
     feedPosts = Post.objects.filter((condition1 | condition2) & condition3).order_by("-createdAt")
+
     context = {
         "feedPosts": feedPosts
     }
 
+
+
     return render(request , "home.html" , context)
+
+
+@require_http_methods(['GET'])
+def search(request):
+    query = request.GET.get("q")
+
+
+    
+    if query:
+        users = User.objects.filter(
+            Q(username__icontains=query) |
+            Q(name__icontains=query)
+        )
+        return render(request , "search.html" , {"users": users})
+    
+    return redirect("home-page")
+     
 
 @require_http_methods(["POST"])
 @login_required()
 def post(request):
-    # print(request.POST)
     post = Post(user=request.user , caption=clean(request.POST["caption"]))
     post.save()
+
     files = request.FILES.getlist("file")
     for file in files:
         f = Media(post=post , file=file)
@@ -101,8 +127,10 @@ class GetAllBookmarks(LoginRequiredMixin , ListView):
     model = Bookmark
     context_object_name = "bookmarks"
     template_name = "bookmark.html"
+
     def get_queryset(self) -> QuerySet[Any]:
-        return Bookmark.objects.filter(user=self.request.user).order_by("-createdAt")
+        bookmarks = Bookmark.objects.filter(user=self.request.user).order_by("-createdAt")    
+        return bookmarks
     
 
 @require_http_methods(["POST"])
