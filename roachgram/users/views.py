@@ -4,6 +4,10 @@ from .models import User , FollowUser
 from django.contrib import messages
 from .forms import RegisterForm , UpdateUserForm
 from django.contrib.auth import login
+from django.contrib.auth import update_session_auth_hash
+from django.contrib.auth.views import PasswordResetView
+from django.contrib.messages.views import SuccessMessageMixin
+from django.urls import reverse_lazy
 
 def registeration(request):
     if request.method == "POST":
@@ -11,6 +15,7 @@ def registeration(request):
         if (form.is_valid()):
             registeredUser = form.save()
             login(request , registeredUser)
+            
             messages.success(request , "your account created succcessfully")
             return redirect("home-page")
     
@@ -103,3 +108,32 @@ def unfollowUser(request , username):
     FollowUser.objects.get(follower=request.user , following=user).delete()
     messages.success(request , f"you are now not following @{user.username}")
     return redirect("user-page" , user.username)
+
+
+@login_required
+def changesPassword(request):
+    
+    if request.method == "GET":
+        return render(request , "changePassword.html")
+
+    user = User.objects.get(username=request.user.username)
+
+    oldPass = request.POST.get("oldPassword")
+    newPass = request.POST.get("newPassword")    
+
+    if user.check_password(oldPass):
+        user.set_password(newPass)
+        user.save()
+        update_session_auth_hash(request, user)
+        messages.success(request , "Your Password Changed Successfully")
+        return redirect("update-user")
+    
+    messages.error(request , "The Old Password Does Not Match")
+    return redirect("change-password")
+
+
+class ResetPassword(PasswordResetView):
+    template_name = "password_reset.html"
+    email_template_name = "password_reset_email.html"
+    subject_template_name = "password_reset_subject.txt"
+    success_url = reverse_lazy("password-reset-done")
