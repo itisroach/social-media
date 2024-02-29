@@ -8,7 +8,7 @@ def user_profile_directory(instance , filename):
 
 class User(AbstractUser):
     name    = models.CharField(max_length=255 , blank=True , null=True)
-    email   = models.EmailField()
+    email   = models.EmailField(unique=True)
     about   = models.TextField(max_length=255 , blank=True , null=True)
     profile = models.ImageField(upload_to=user_profile_directory , default="default-profile.png" , blank=True , null=True)
 
