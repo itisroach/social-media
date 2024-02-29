@@ -1,7 +1,7 @@
 {% load tailwind_filters %}
 {% load crispy_forms_tags %}
 <script src="https://cdn.tailwindcss.com"></script>
-	{% block content %}          
+	{% block content %}       
 
 	<h1 class="text-center text-2xl font-semibold font-sans mt-10">Login To Your Account</h1>
 	<div class="container py-5 mt-10 flex flex-col justify-center items-center">
@@ -11,6 +11,7 @@
             <button class="mb-4 bg-blue-500 rounded-lg text-white px-6 py-2" type="submit">Login</button>              
         </form>
         <a class="text-blue-400 underline" href="{% url 'register-user' %}">Don't Have An Account? Signup Instead.</a>
+        <a class="text-blue-400 underline" href="{% url 'password-reset' %}">Forgot Your Password? Reset Password.</a>
 	</div>
 
 {% endblock %}
