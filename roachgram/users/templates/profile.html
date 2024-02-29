@@ -33,11 +33,13 @@
         profile.src = blob
 }
 </script>
-<form enctype="multipart/form-data" method="post" class="flex pt-10 flex-col justify-center items-center" action="">
+<form enctype="multipart/form-data" method="post" class="flex pt-5 flex-col justify-center items-center" action="">
     <label for="id_profile" class="cursor-pointer">
         <img style="height:9rem; width:9rem;" id="profile" class="md profile rounded-full aspect-square object-cover relative" src="{{user.profile.url}}" alt="">
     </label>
+    <a class="mt-5 text-blue-400 underline" href="{% url 'change-password' %}">Change Password</a>
     {% csrf_token %}
     {% crispy form %}
+    
 </form>
 {% endblock content %}
