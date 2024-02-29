@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     "crispy_tailwind",
     "bleach",
     "debug_toolbar",
+    'rest_framework'
 ]
 
 MIDDLEWARE = [
