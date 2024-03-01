@@ -1,15 +1,22 @@
 from rest_framework.views import APIView
-from .serializers import PostSerializer , CreatePostSerializer
-from ..models import Post
+from .serializers import (
+    PostSerializer , 
+    CreatePostSerializer , 
+    LikePostSerializer,
+    )
+
+
+from ..models import Post , Like
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.exceptions import PermissionDenied , NotAuthenticated
-from rest_framework.generics import RetrieveAPIView
+from rest_framework.views import Http404
+from rest_framework.generics import RetrieveAPIView , ListAPIView
 
 class PostViews(APIView):
 
     def get(self , request , format=None):
-        posts = Post.objects.all()
+        posts = Post.objects.all().order_by('-createdAt')
         serializer = PostSerializer(posts , many=True)
         return Response(serializer.data)
 
@@ -49,3 +56,52 @@ class PostViews(APIView):
 class PostDetailView(RetrieveAPIView):
     serializer_class = PostSerializer
     queryset = Post.objects.all()
+
+
+class UserPostListView(ListAPIView):
+    serializer_class = PostSerializer
+    lookup_field = "username"
+
+    def get_queryset(self):
+        posts = Post.objects.filter(user__username=self.kwargs["username"]).order_by('-createdAt')
+        serializer = self.get_serializer(posts , many=True)
+        return serializer.data
+    
+
+class LikePostView(APIView):
+    
+    def post(self , request , format=None):
+        
+        likeInstance = Like.objects.filter(user=request.user.id , post=request.data["post"])
+
+        if likeInstance.exists():
+            return Response({"message": "post liked before"} , status=status.HTTP_409_CONFLICT)
+
+        if request.user.is_authenticated:
+            request.data["user"] = request.user.id
+            serializer = LikePostSerializer(data=request.data)
+
+            if serializer.is_valid():
+                serializer.save()
+                return Response({"message": "liked post"} , status=status.HTTP_201_CREATED)
+            
+            return Response(serializer.errors , status=status.HTTP_400_BAD_REQUEST)
+
+        else:
+            raise NotAuthenticated
+        
+
+    def delete(self , request , format=None):
+        
+        if request.user.is_authenticated:
+            request.data["user"] = request.user.id
+            try:
+                likeInstance = Like.objects.get(post=request.data["post"] , user=request.data["user"])
+            except Like.DoesNotExist:
+                raise Http404
+            
+            likeInstance.delete()
+
+            return Response({"message": "successfully removed from your likes"} , status=status.HTTP_200_OK)
+        else:
+            raise NotAuthenticated
