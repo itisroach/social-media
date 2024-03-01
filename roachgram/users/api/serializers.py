@@ -1,10 +1,21 @@
 from rest_framework import serializers
 from ..models import User
+from rest_framework.decorators import parser_classes
+from rest_framework.parsers import MultiPartParser , FormParser , JSONParser , FileUploadParser
 
-class CreateUserSeralizer(serializers.ModelSerializer):
+class UserSerializer(serializers.ModelSerializer):
+
+
+    class Meta:
+        model = User
+        fields = ["name" , "username" , "about" , "profile"]
+    
+
+class CreateUserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ["name" , "username" , "about" , "password" , "email" , "profile"]
+
 
     def create(self, validated_data):
         password = validated_data.pop('password', None)
@@ -13,6 +24,8 @@ class CreateUserSeralizer(serializers.ModelSerializer):
             instance.set_password(password)
         instance.save()
         return instance
+    
+
     
 class UpdateUserSeralizer(serializers.ModelSerializer):
     class Meta:
