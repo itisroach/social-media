@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from ..models import User
+from ..models import User , FollowUser
 from rest_framework.decorators import parser_classes
 from rest_framework.parsers import MultiPartParser , FormParser , JSONParser , FileUploadParser
 
@@ -8,7 +8,7 @@ class UserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ["name" , "username" , "about" , "profile"]
+        fields = ["id" , "name" , "username" , "about" , "profile"]
     
 
 class CreateUserSerializer(serializers.ModelSerializer):
@@ -38,3 +38,10 @@ class ChangePasswordSerializer(serializers.Serializer):
 
     old_password = serializers.CharField(required=True)
     new_password = serializers.CharField(required=True)
+
+
+
+class FollowSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = FollowUser
+        fields = "__all__"
