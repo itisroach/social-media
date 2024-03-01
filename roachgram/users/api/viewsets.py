@@ -1,11 +1,12 @@
 from rest_framework.response import Response
 from rest_framework import status
-from rest_framework.decorators import api_view
-from .serializers import CreateUserSeralizer , UpdateUserSeralizer , ChangePasswordSerializer
+from rest_framework.decorators import api_view , parser_classes
+from .serializers import CreateUserSerializer , UpdateUserSeralizer , ChangePasswordSerializer , UserSerializer
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework_simplejwt.views import TokenObtainPairView
 from ..models import User
-from rest_framework.generics import UpdateAPIView
+from rest_framework.parsers import MultiPartParser
+from rest_framework.generics import UpdateAPIView , ListAPIView , RetrieveAPIView
 from rest_framework.permissions import IsAuthenticated
 
 class MyTokenSerializer(TokenObtainPairSerializer):
@@ -27,10 +28,23 @@ class MyToken(TokenObtainPairView):
 
 @api_view(["POST"])
 def createUser(request):
-    serializer = CreateUserSeralizer(data=request.data)
+    serializer = CreateUserSerializer(data=request.data)
     serializer.is_valid(raise_exception=True)
     serializer.create(request.data)
+    
     return Response(serializer.data)
+
+
+class AllUsers(ListAPIView):
+    serializer_class = UserSerializer
+    queryset = User.objects.all()
+
+    
+class OneUser(RetrieveAPIView):
+    serializer_class = UserSerializer
+    queryset = User.objects.all()
+    lookup_field = "username"
+    
 
 
 class UpdateUser(UpdateAPIView):
