@@ -29,6 +29,6 @@ urlpatterns = [
     path("api/auth/" , include("users.api.urls")),
 
     # feeds api routes
-    path("api/posts" , include("feeds.api.urls"))
+    path("api/posts/" , include("feeds.api.urls"))
 
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
