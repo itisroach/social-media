@@ -26,6 +26,9 @@ urlpatterns = [
     path("__debug__/", include("debug_toolbar.urls")),
 
     # user api routes
-    path("api/auth/" , include("users.api.urls"))
+    path("api/auth/" , include("users.api.urls")),
+
+    # feeds api routes
+    path("api/posts" , include("feeds.api.urls"))
 
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
