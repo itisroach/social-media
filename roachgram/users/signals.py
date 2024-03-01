@@ -6,6 +6,7 @@ from .models import User
 # for removing folders and files
 import shutil
 import os
+from pathlib import Path
 
 from roachgram.settings import BASE_DIR
 
@@ -21,8 +22,9 @@ def userLoggedIn(sender , request , **kwargs):
 
 # removes a folder
 def removeDir(path):
-    fileLocation = os.path.join(BASE_DIR, path)
-    shutil.rmtree(fileLocation , ignore_errors=False)
+    folderLocation = os.path.join(BASE_DIR, path)
+    if Path(folderLocation).exists():
+        shutil.rmtree(folderLocation , ignore_errors=False)
 
 # when user account deleted all of its uploads gets deleted
 @receiver(pre_delete , sender=User)
