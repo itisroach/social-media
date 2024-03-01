@@ -4,8 +4,7 @@ from ..models import Post
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.exceptions import PermissionDenied , NotAuthenticated
-
-
+from rest_framework.generics import RetrieveAPIView
 
 class PostViews(APIView):
 
@@ -45,3 +44,8 @@ class PostViews(APIView):
             return Response({"message":"post deleted successfully"} , status=status.HTTP_200_OK)
         else:
             raise NotAuthenticated
+        
+
+class PostDetailView(RetrieveAPIView):
+    serializer_class = PostSerializer
+    queryset = Post.objects.all()
