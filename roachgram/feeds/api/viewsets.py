@@ -3,7 +3,6 @@ from .serializers import (
     PostSerializer , 
     CreatePostSerializer , 
     LikePostSerializer,
-    SaveMediaSerializer
     )
 
 
@@ -11,10 +10,9 @@ from ..models import Post , Like , Media
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
-from rest_framework.parsers import MultiPartParser , JSONParser
 from rest_framework.exceptions import PermissionDenied , NotAuthenticated
 from rest_framework.views import Http404
-from rest_framework.generics import RetrieveAPIView , ListAPIView , CreateAPIView
+from rest_framework.generics import RetrieveAPIView , ListAPIView
 
 class PostViews(APIView):
     def get(self , request , format=None):
