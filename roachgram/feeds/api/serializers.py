@@ -32,6 +32,10 @@ class CreatePostSerializer(serializers.ModelSerializer):
         model = Post
         fields = "__all__"
 
+class SaveMediaSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Media
+        fields = "__all__"
 
 class LikePostSerializer(serializers.ModelSerializer):
     class Meta:
