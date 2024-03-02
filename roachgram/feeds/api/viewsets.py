@@ -3,15 +3,18 @@ from .serializers import (
     PostSerializer , 
     CreatePostSerializer , 
     LikePostSerializer,
+    SaveMediaSerializer
     )
 
 
-from ..models import Post , Like
+from ..models import Post , Like , Media
 from rest_framework.response import Response
 from rest_framework import status
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.parsers import MultiPartParser
 from rest_framework.exceptions import PermissionDenied , NotAuthenticated
 from rest_framework.views import Http404
-from rest_framework.generics import RetrieveAPIView , ListAPIView
+from rest_framework.generics import RetrieveAPIView , ListAPIView , CreateAPIView
 
 class PostViews(APIView):
 
@@ -51,6 +54,13 @@ class PostViews(APIView):
             return Response({"message":"post deleted successfully"} , status=status.HTTP_200_OK)
         else:
             raise NotAuthenticated
+        
+
+class SaveMedia(CreateAPIView):
+    serializer_class = SaveMediaSerializer
+    queryset = Media.objects.all()
+    permission_classes = [IsAuthenticated,]
+    parser_classes = [MultiPartParser,]
         
 
 class PostDetailView(RetrieveAPIView):
