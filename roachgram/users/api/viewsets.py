@@ -11,6 +11,7 @@ from .serializers import (
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework_simplejwt.views import TokenObtainPairView
 from ..models import User , FollowUser
+from rest_framework.parsers import MultiPartParser, JSONParser
 from rest_framework.generics import UpdateAPIView , ListAPIView , RetrieveAPIView , CreateAPIView
 from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated
@@ -44,19 +45,18 @@ class OneUser(RetrieveAPIView):
     serializer_class = UserSerializer
     queryset = User.objects.all()
     lookup_field = "username"
-    
+
+class RegisterUser(CreateAPIView):
+    serializer_class = CreateUserSerializer
+
+
+    def perform_create(self, serializer):
+        instance = serializer.save()
+        instance.set_password(instance.password)
+        instance.save()
+
 class UserView(APIView):
 
-    
-
-    def post(self, request , format=None):
-        serializer = CreateUserSerializer(data=request.data)
-         
-        if serializer.is_valid():
-            serializer.create(request.data)
-            return Response(serializer.data , status=status.HTTP_201_CREATED)
-
-        return Response(serializer.errors , status=status.HTTP_400_BAD_REQUEST)
     
     def delete(self , request , format=None):
         self.check_object_permissions(request , request.user)
