@@ -7,6 +7,7 @@ from rest_framework_simplejwt.views import (
 )
 
 urlpatterns = [
+    path("register" , viewsets.RegisterUser.as_view() , name="api-register"),    
     path("user" , viewsets.UserView.as_view() , name="api-user"),    
     path("edit-user" , viewsets.UpdateUser.as_view() , name="api-update-user"),
     path("change-password" , viewsets.ChangePassword.as_view() , name="api-change-password"),
