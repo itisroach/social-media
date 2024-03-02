@@ -11,13 +11,12 @@ from ..models import Post , Like , Media
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
-from rest_framework.parsers import MultiPartParser
+from rest_framework.parsers import MultiPartParser , JSONParser
 from rest_framework.exceptions import PermissionDenied , NotAuthenticated
 from rest_framework.views import Http404
 from rest_framework.generics import RetrieveAPIView , ListAPIView , CreateAPIView
 
 class PostViews(APIView):
-
     def get(self , request , format=None):
         posts = Post.objects.all().order_by('-createdAt')
         serializer = PostSerializer(posts , many=True)
@@ -27,13 +26,25 @@ class PostViews(APIView):
     def post(self , request , format=None):
         
         if request.user.is_authenticated:
-            if request.user.id != request.data["user"]:
+            if request.user.id != int(request.data["user"]):
                 raise PermissionDenied
         
             serializer = CreatePostSerializer(data=request.data)
 
             if serializer.is_valid():
-                serializer.save()
+                post = serializer.save()
+                
+                # uploadin files
+                if request.FILES:
+                    request.data["post"] = post.id
+                    mediaSerializer = SaveMediaSerializer(data=request.data)
+                    if mediaSerializer.is_valid():
+                        mediaSerializer.save()
+                        postSerializer = PostSerializer(post)
+                        return Response(postSerializer.data , status=status.HTTP_201_CREATED)
+                    else:
+                        return Response(serializer.errors , status=status.HTTP_400_BAD_REQUEST)
+                    
                 return Response(serializer.data , status=status.HTTP_201_CREATED)
             
             return Response(serializer.errors , status=status.HTTP_400_BAD_REQUEST)
@@ -56,11 +67,6 @@ class PostViews(APIView):
             raise NotAuthenticated
         
 
-class SaveMedia(CreateAPIView):
-    serializer_class = SaveMediaSerializer
-    queryset = Media.objects.all()
-    permission_classes = [IsAuthenticated,]
-    parser_classes = [MultiPartParser,]
         
 
 class PostDetailView(RetrieveAPIView):
