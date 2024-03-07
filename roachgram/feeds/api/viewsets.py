@@ -93,12 +93,29 @@ class CommentView(APIView):
             if request.user.id != int(request.data["user"]):
                 raise PermissionDenied
 
+
+    
+            request.data["repliedTo"] = int(pk)
+            request.data["isReply"] = True
+         
             serializer = CommentSerializer(data=request.data)
 
             if serializer.is_valid():
                 comment = serializer.save()
 
                 commentSerializer = PostSerializer(comment)
+
+                if request.FILES:
+                 
+                    request.data["post"] = comment.id
+               
+                    mediaSerializer = SaveMediaSerializer(data=request.data)
+                    
+                    if mediaSerializer.is_valid():
+                        mediaSerializer.save()
+                        return Response(commentSerializer.data , status=status.HTTP_201_CREATED)
+
+                    return Response(mediaSerializer.errors , status=status.HTTP_400_BAD_REQUEST)
                 
                 return Response(commentSerializer.data , status=status.HTTP_201_CREATED)
             
@@ -107,7 +124,22 @@ class CommentView(APIView):
 
         else:
             raise NotAuthenticated
+        
 
+    def delete(self , request, pk , format=None):
+        if request.user.is_authenticated:
+            try:
+                comment = Comment.objects.get(id=request.data["id"])
+            except Comment.DoesNotExist:
+                return Response({"message":"comment not found"} , status=status.HTTP_404_NOT_FOUND)
+            if comment.user.id != request.user.id:
+                raise PermissionDenied
+            
+            comment.delete()
+
+            return Response({"message":"comment deleted successfully"} , status=status.HTTP_200_OK)
+        else:
+            raise NotAuthenticated
 
 
 class UserPostListView(ListAPIView):
