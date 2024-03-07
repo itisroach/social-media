@@ -3,13 +3,15 @@ from .serializers import (
     PostSerializer , 
     CreatePostSerializer , 
     LikePostSerializer,
-    SaveMediaSerializer
+    SaveMediaSerializer,
+    CommentSerializer,
     )
 
 
-from ..models import Post , Like , Media
+from ..models import Post , Like , Comment
 from rest_framework.response import Response
 from rest_framework import status
+from rest_framework.parsers import MultiPartParser
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.exceptions import PermissionDenied , NotAuthenticated
 from rest_framework.views import Http404
@@ -17,7 +19,7 @@ from rest_framework.generics import RetrieveAPIView , ListAPIView
 
 class PostViews(APIView):
     def get(self , request , format=None):
-        posts = Post.objects.all().order_by('-createdAt')
+        posts = Post.objects.filter(isReply=False).order_by('-createdAt')
         serializer = PostSerializer(posts , many=True)
         return Response(serializer.data)
 
@@ -28,12 +30,13 @@ class PostViews(APIView):
             if request.user.id != int(request.data["user"]):
                 raise PermissionDenied
         
+        
             serializer = CreatePostSerializer(data=request.data)
 
             if serializer.is_valid():
                 post = serializer.save()
                 
-                # uploadin files
+                # uploading files
                 if request.FILES:
                     request.data["post"] = post.id
                     mediaSerializer = SaveMediaSerializer(data=request.data)
@@ -42,7 +45,7 @@ class PostViews(APIView):
                         postSerializer = PostSerializer(post)
                         return Response(postSerializer.data , status=status.HTTP_201_CREATED)
                     else:
-                        return Response(serializer.errors , status=status.HTTP_400_BAD_REQUEST)
+                        return Response(post.errors , status=status.HTTP_400_BAD_REQUEST)
                     
                 return Response(serializer.data , status=status.HTTP_201_CREATED)
             
@@ -66,11 +69,45 @@ class PostViews(APIView):
             raise NotAuthenticated
         
 
-        
 
 class PostDetailView(RetrieveAPIView):
     serializer_class = PostSerializer
     queryset = Post.objects.all()
+
+
+class CommentView(APIView):
+    def get(self, request, pk , format=None):
+
+
+        comments = Comment.objects.filter(repliedTo=pk)
+
+        if len(comments) < 1:
+            raise Http404
+
+        serializer = PostSerializer(comments , many=True)
+        return Response(serializer.data , status=status.HTTP_200_OK)
+    
+
+    def post(self , request , pk , format=None):
+        if request.user.is_authenticated:
+            if request.user.id != int(request.data["user"]):
+                raise PermissionDenied
+
+            serializer = CommentSerializer(data=request.data)
+
+            if serializer.is_valid():
+                comment = serializer.save()
+
+                commentSerializer = PostSerializer(comment)
+                
+                return Response(commentSerializer.data , status=status.HTTP_201_CREATED)
+            
+            # bad request 
+            return Response(serializer.errors , status=status.HTTP_400_BAD_REQUEST)
+
+        else:
+            raise NotAuthenticated
+
 
 
 class UserPostListView(ListAPIView):
