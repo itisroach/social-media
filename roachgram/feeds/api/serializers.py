@@ -1,11 +1,19 @@
 from rest_framework import serializers
-from ..models import Post, Like , Media
+from ..models import Post, Like , Media , Comment
 from users.api.serializers import UserSerializer
 
 class GetMediaSerializer(serializers.ModelSerializer):
     class Meta:
         model = Media
         fields = ["file"]
+
+class CommentSerializer(serializers.ModelSerializer):
+    
+    class Meta:
+        model = Comment
+        fields = "__all__"
+
+
 
 class PostSerializer(serializers.ModelSerializer):
     user = UserSerializer(read_only=True)
@@ -24,6 +32,7 @@ class PostSerializer(serializers.ModelSerializer):
         serializer = GetMediaSerializer(media , many=True)
 
         return serializer.data
+
         
 
 
