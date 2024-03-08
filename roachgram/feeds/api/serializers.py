@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from ..models import Post, Like , Media , Comment
+from ..models import Post, Like , Media , Comment , Bookmark
 from users.api.serializers import UserSerializer
 
 class MediaSerializer(serializers.ModelSerializer):
@@ -24,6 +24,10 @@ class CommentSerializer(serializers.ModelSerializer):
 class PostSerializer(serializers.ModelSerializer):
     user = UserSerializer(read_only=True)
     media_url = serializers.SerializerMethodField()
+    # a boolean field for knowing if logged in user liked post or not
+    liked = serializers.SerializerMethodField(method_name="liked_before")
+    # another boolean field for knowing if logged in user bookmarked post or not
+    bookmarked = serializers.SerializerMethodField(method_name="bookmarked_before")
     class Meta:
         model = Post
         fields = "__all__"
@@ -39,6 +43,32 @@ class PostSerializer(serializers.ModelSerializer):
 
         return serializer.data
 
+    def liked_before(self , obj):
+        # the context is from calling serializer in viewsets
+        request = self.context.get("request" , None)
+        
+        liked = False
+
+        try:
+            Like.objects.get(post=obj , user=request.user.id)
+            liked = True
+        except Like.DoesNotExist:
+            pass
+
+
+        return liked
+    
+    def bookmarked_before(self , obj):
+        # the context is from calling serializer in viewsets
+        request = self.context.get("request" , None)
+        bookmarked = False
+        try:
+            Bookmark.objects.get(user=request.user.id , post=obj)
+            bookmarked = True
+        except Bookmark.DoesNotExist:
+            pass
+
+        return bookmarked
         
 
 
