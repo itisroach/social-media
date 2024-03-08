@@ -16,13 +16,23 @@ from rest_framework.parsers import MultiPartParser , FileUploadParser
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.exceptions import PermissionDenied , NotAuthenticated
 from rest_framework.views import Http404
+from rest_framework.pagination import CursorPagination
 from rest_framework.generics import RetrieveAPIView , ListAPIView
 
-class PostViews(APIView):
+
+class PostCursorPagination(CursorPagination):
+    ordering = "-createdAt"
+    page_size = 10
+
+   
+class PostViews(APIView , PostCursorPagination):
+
+
     def get(self , request , format=None):
-        posts = Post.objects.filter(isReply=False).order_by('-createdAt')
-        serializer = PostSerializer(posts , many=True)
-        return Response(serializer.data)
+        posts = Post.objects.all()
+        result = self.paginate_queryset(posts , request , view=self)
+        serializer = PostSerializer(result , many=True, context={"request": request})
+        return self.get_paginated_response(serializer.data)
 
 
     def post(self , request , format=None):
