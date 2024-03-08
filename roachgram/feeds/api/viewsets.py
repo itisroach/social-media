@@ -5,13 +5,14 @@ from .serializers import (
     LikePostSerializer,
     SaveMediaSerializer,
     CommentSerializer,
+    MediaSerializer
     )
 
 
 from ..models import Post , Like , Comment
 from rest_framework.response import Response
 from rest_framework import status
-from rest_framework.parsers import MultiPartParser
+from rest_framework.parsers import MultiPartParser , FileUploadParser
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.exceptions import PermissionDenied , NotAuthenticated
 from rest_framework.views import Http404
@@ -35,20 +36,23 @@ class PostViews(APIView):
 
             if serializer.is_valid():
                 post = serializer.save()
-                
-                # uploading files
+
                 if request.FILES:
                     request.data["post"] = post.id
-                    mediaSerializer = SaveMediaSerializer(data=request.data)
-                    if mediaSerializer.is_valid():
-                        mediaSerializer.save()
+                    mediaserializer =  MediaSerializer(data=request.data)
+                    if mediaserializer.is_valid():
+                        mediaserializer.create(request.data , postInstance=post)
                         postSerializer = PostSerializer(post)
+                        # returns whole post with images that uploaded
                         return Response(postSerializer.data , status=status.HTTP_201_CREATED)
-                    else:
-                        return Response(post.errors , status=status.HTTP_400_BAD_REQUEST)
                     
+                    #  if uploaded file is not image post that save will be deleted and a respone returns
+                    post.delete()
+                    return Response(mediaserializer.errors , status=status.HTTP_400_BAD_REQUEST)
+                
+                # if there was no files just saves the post
                 return Response(serializer.data , status=status.HTTP_201_CREATED)
-            
+            # if post credentials was not valid
             return Response(serializer.errors , status=status.HTTP_400_BAD_REQUEST)
         else:
             raise NotAuthenticated
@@ -68,7 +72,6 @@ class PostViews(APIView):
         else:
             raise NotAuthenticated
         
-
 
 class PostDetailView(RetrieveAPIView):
     serializer_class = PostSerializer
@@ -106,16 +109,17 @@ class CommentView(APIView):
                 commentSerializer = PostSerializer(comment)
 
                 if request.FILES:
-                 
                     request.data["post"] = comment.id
-               
-                    mediaSerializer = SaveMediaSerializer(data=request.data)
+                    mediaserializer =  MediaSerializer(data=request.data)
+                    if mediaserializer.is_valid():
+                        mediaserializer.create(request.data , postInstance=comment)
+                        postSerializer = PostSerializer(comment)
+                        # returns whole post with images that uploaded
+                        return Response(postSerializer.data , status=status.HTTP_201_CREATED)
                     
-                    if mediaSerializer.is_valid():
-                        mediaSerializer.save()
-                        return Response(commentSerializer.data , status=status.HTTP_201_CREATED)
-
-                    return Response(mediaSerializer.errors , status=status.HTTP_400_BAD_REQUEST)
+                    #  if uploaded file is not image post that save will be deleted and a respone returns
+                    comment.delete()
+                    return Response(mediaserializer.errors , status=status.HTTP_400_BAD_REQUEST)
                 
                 return Response(commentSerializer.data , status=status.HTTP_201_CREATED)
             
