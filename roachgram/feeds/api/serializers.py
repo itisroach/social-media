@@ -2,10 +2,16 @@ from rest_framework import serializers
 from ..models import Post, Like , Media , Comment
 from users.api.serializers import UserSerializer
 
-class GetMediaSerializer(serializers.ModelSerializer):
+class MediaSerializer(serializers.ModelSerializer):
+
     class Meta:
         model = Media
-        fields = ["file"]
+        fields = ["id","file"]
+
+    def create(self, validated_data , postInstance):
+        files = validated_data.pop("file")
+        for file in files:
+            Media.objects.create(post=postInstance , file=file)
 
 class CommentSerializer(serializers.ModelSerializer):
     
@@ -29,7 +35,7 @@ class PostSerializer(serializers.ModelSerializer):
         except Media.DoesNotExist:
             return None
 
-        serializer = GetMediaSerializer(media , many=True)
+        serializer = MediaSerializer(media , many=True)
 
         return serializer.data
 
