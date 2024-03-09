@@ -58,7 +58,6 @@ INSTALLED_APPS = [
     "crispy_forms",
     "crispy_tailwind",
     "bleach",
-    "debug_toolbar",
     'django.contrib.auth',
 
     
@@ -71,9 +70,7 @@ REST_FRAMEWORK = {
 
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
-    ),
-    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.CursorPagination',
-    'PAGE_SIZE': 10
+    )
 }
 
 
@@ -131,8 +128,7 @@ MIDDLEWARE = [
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
-    'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    "debug_toolbar.middleware.DebugToolbarMiddleware"
+    'django.middleware.clickjacking.XFrameOptionsMiddleware'
 ]
 
 
@@ -163,11 +159,7 @@ TEMPLATES = [
         },
     },
 ]
-INTERNAL_IPS = [
-    # ...
-    "127.0.0.1",
-    # ...
-]
+
 WSGI_APPLICATION = 'roachgram.wsgi.application'
 
 

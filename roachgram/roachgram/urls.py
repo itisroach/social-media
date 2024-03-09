@@ -23,7 +23,6 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path("users/" , include("users.urls")),
     path("" , include("feeds.urls")),
-    path("__debug__/", include("debug_toolbar.urls")),
 
     # user api routes
     path("api/auth/" , include("users.api.urls")),
