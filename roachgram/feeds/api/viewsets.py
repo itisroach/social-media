@@ -88,17 +88,16 @@ class PostDetailView(RetrieveAPIView):
     queryset = Post.objects.all()
 
 
-class CommentView(APIView):
+class CommentView(APIView , PostCursorPagination):
     def get(self, request, pk , format=None):
 
 
         comments = Comment.objects.filter(repliedTo=pk)
 
-        if len(comments) < 1:
-            raise Http404
+        result = self.paginate_queryset(comments , request , view=self)        
 
-        serializer = PostSerializer(comments , many=True)
-        return Response(serializer.data , status=status.HTTP_200_OK)
+        serializer = PostSerializer(result , many=True , context={"request": request})
+        return self.get_paginated_response(serializer.data)
     
 
     def post(self , request , pk , format=None):
