@@ -86,3 +86,12 @@ class LikePostSerializer(serializers.ModelSerializer):
     class Meta:
         model  = Like
         fields = '__all__'
+
+
+class CreateBookmarkSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Bookmark
+        fields = "__all__"
+
+class BookmarkSerializer(CreateBookmarkSerializer):
+    post = PostSerializer(read_only=True)
