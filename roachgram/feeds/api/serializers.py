@@ -1,6 +1,7 @@
 from rest_framework import serializers
 from ..models import Post, Like , Media , Comment , Bookmark
 from users.api.serializers import UserSerializer
+from django.utils.html import escape
 
 class MediaSerializer(serializers.ModelSerializer):
 
@@ -14,11 +15,13 @@ class MediaSerializer(serializers.ModelSerializer):
             Media.objects.create(post=postInstance , file=file)
 
 class CommentSerializer(serializers.ModelSerializer):
-    
+
     class Meta:
         model = Comment
         fields = "__all__"
 
+    def validate_caption(self , value):
+        return escape(value)
 
 
 class PostSerializer(serializers.ModelSerializer):
@@ -76,6 +79,9 @@ class CreatePostSerializer(serializers.ModelSerializer):
     class Meta:
         model = Post
         fields = "__all__"
+
+    def validate_caption(self , value):
+        return escape(value)
 
 class SaveMediaSerializer(serializers.ModelSerializer):
     class Meta:
