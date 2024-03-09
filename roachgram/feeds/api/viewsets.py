@@ -4,11 +4,13 @@ from .serializers import (
     CreatePostSerializer , 
     LikePostSerializer,
     CommentSerializer,
-    MediaSerializer
+    MediaSerializer,
+    CreateBookmarkSerializer,
+    BookmarkSerializer
     )
 
 
-from ..models import Post , Like , Comment
+from ..models import Post , Like , Comment , Bookmark
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.parsers import FormParser , MultiPartParser
@@ -276,3 +278,45 @@ class LikePostView(APIView):
         else:
             raise NotAuthenticated
         
+
+# POST , GET
+class BoookmarkView(APIView , PostCursorPagination):
+
+    def post(self , request , format=None):
+
+        if request.user.is_authenticated:
+
+            serializer = CreateBookmarkSerializer(data=request.data)
+
+            if serializer.is_valid():
+                if request.user.id != int(request.data["user"]):
+                    raise PermissionDenied
+            
+
+                try:
+                    # if already bookmarkd removes it
+                    bookmarkInstance = Bookmark.objects.get(user=request.data["user"] , post=request.data["post"])
+                    bookmarkInstance.delete()
+                    return Response({"message": "post removed from your bookmarks"} , status=status.HTTP_200_OK)
+
+                except Bookmark.DoesNotExist:
+                    # if does not exist adds it
+                    serializer.save()
+                    return Response({"message": "post added to your bookmakrs"} , status=status.HTTP_201_CREATED)
+            return Response(serializer.errors , status=status.HTTP_400_BAD_REQUEST)
+        # if user is not logged in
+        else:
+            raise NotAuthenticated
+        
+
+    def get(self , request , format=None):
+        
+        if request.user.is_authenticated:
+            posts = Bookmark.objects.filter(user=request.user.id)
+            paginatedQueryset = self.paginate_queryset(posts , request , view=self)
+            serialzer = BookmarkSerializer(paginatedQueryset , many=True , context={"request": request})
+
+            return self.get_paginated_response(serialzer.data)
+
+        else:
+            raise NotAuthenticated
