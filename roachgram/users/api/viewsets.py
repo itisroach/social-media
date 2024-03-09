@@ -15,6 +15,7 @@ from rest_framework.parsers import MultiPartParser, JSONParser
 from rest_framework.generics import UpdateAPIView , ListAPIView , RetrieveAPIView , CreateAPIView
 from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated
+from rest_framework.pagination import CursorPagination
 
 class MyTokenSerializer(TokenObtainPairSerializer):
     @classmethod
@@ -34,11 +35,14 @@ class MyToken(TokenObtainPairView):
 
 
 
-
+class UserCursorPagination(CursorPagination):
+    ordering = "-date_joined"
+    page_size = 10
 
 class AllUsers(ListAPIView):
     serializer_class = UserSerializer
     queryset = User.objects.all()
+    pagination_class = UserCursorPagination
 
     
 class OneUser(RetrieveAPIView):
@@ -131,6 +135,9 @@ class FollowView(APIView):
 
         if followInstance.exists():
             return Response({"message": "the authorized user is already following this user"} , status=status.HTTP_409_CONFLICT)
+
+        if request.data["following"] == request.user.id:
+            return Response({"message": "you can not follow yourself"} , status=status.HTTP_400_BAD_REQUEST)
 
         request.data["follower"] = request.user.id
         serializer = FollowSerializer(data=request.data)
