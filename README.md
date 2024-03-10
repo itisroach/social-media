@@ -18,11 +18,15 @@ RoachGram is a social media platform where users can share their thoughts and po
 
 * ##### get all users: api/auth/users
 
+* ##### search users: api/auth/users?search=<search query>
+
 * ##### following and unfollowing an user endpoint: api/auth/follow (if already followed it will unfollow)
 
 * ##### get single user enpoint: api/auth/users/<username>
 
 * ##### get all posts: api/posts/ (depends on user's followings) 
+
+* ##### search posts: api/posts/find?search=<search query>
 
 * ##### creating a post: api/posts/ (POST METHOD)
 
