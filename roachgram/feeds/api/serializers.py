@@ -29,8 +29,11 @@ class PostSerializer(serializers.ModelSerializer):
     media_url = serializers.SerializerMethodField()
     # a boolean field for knowing if logged in user liked post or not
     liked = serializers.SerializerMethodField(method_name="liked_before")
+    likesCount = serializers.SerializerMethodField(method_name="likes_count")
+    commentsCount = serializers.SerializerMethodField(method_name="comments_count")
     # another boolean field for knowing if logged in user bookmarked post or not
     bookmarked = serializers.SerializerMethodField(method_name="bookmarked_before")
+    bookmarksCount = serializers.SerializerMethodField(method_name="bookmarks_count")
     class Meta:
         model = Post
         fields = "__all__"
@@ -72,6 +75,16 @@ class PostSerializer(serializers.ModelSerializer):
             pass
 
         return bookmarked
+    
+
+    def likes_count(self , obj):
+        return Like.objects.filter(post=obj.id).count()
+    
+    def comments_count(self , obj):
+        return Comment.objects.filter(repliedTo=obj).count()
+    
+    def bookmarks_count(self , obj):
+        return Bookmark.objects.filter(post=obj).count()
         
 
 
