@@ -18,7 +18,7 @@ RoachGram is a social media platform where users can share their thoughts and po
 
 * ##### get all users: api/auth/users
 
-* ##### search users: api/auth/users?search=<search query>
+* ##### search users: api/auth/users?search=(search query)
 
 * ##### following and unfollowing an user endpoint: api/auth/follow (if already followed it will unfollow)
 
@@ -26,21 +26,21 @@ RoachGram is a social media platform where users can share their thoughts and po
 
 * ##### get all posts: api/posts/ (depends on user's followings) 
 
-* ##### search posts: api/posts/find?search=<search query>
+* ##### search posts: api/posts/find?search=(search query)
 
 * ##### creating a post: api/posts/ (POST METHOD)
 
 * ##### deleting a post: api/posts/ (DELETE METHOD)
 
-* ##### get single post: api/posts/<id>
+* ##### get single post: api/posts/(id)
 
-* ##### get post's comments: api/posts/<id>/comments
+* ##### get post's comments: api/posts/(id)/comments
 
-* ##### creating a comment: api/posts/<id>/comments (POST METHOD)
+* ##### creating a comment: api/posts/(id)/comments (POST METHOD)
 
-* ##### deleting a comment: api/posts/<id>/comments (DELETE METHOD)
+* ##### deleting a comment: api/posts/(id)/comments (DELETE METHOD)
 
-* ##### get an user's posts: api/posts/users/<username>
+* ##### get an user's posts: api/posts/users/(username)
 
 * ##### like and unlike a post: api/posts/like (POST METHOD AND IF ALREADY LIKED IT WILL UNLIKE IT)
 
