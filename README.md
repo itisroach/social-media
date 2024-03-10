@@ -56,3 +56,5 @@ RoachGram is a social media platform where users can share their thoughts and po
 * this website is hosted for free on [pythonanywhere](https://pythonanywhere.com/).
 
 * the media that users upload will be stored on server not on a cloud platform (because of some limitations) and only image types accepted because of that.
+
+* API uses [cursor pagination](https://www.django-rest-framework.org/api-guide/pagination/#cursorpagination) when fetching large data for improving response time.
