@@ -5,10 +5,21 @@ from rest_framework.parsers import MultiPartParser , FormParser , JSONParser , F
 
 class UserSerializer(serializers.ModelSerializer):
     isFollowing = serializers.SerializerMethodField(method_name="is_following_user")
-
+    followersCount = serializers.SerializerMethodField(method_name="followers_count")
+    followingsCount = serializers.SerializerMethodField(method_name="followings_count")
     class Meta:
         model = User
-        fields = ["id" , "name" , "username" , "isFollowing" , "about" , "profile" , "date_joined"]
+        fields = [
+            "id",
+            "name",
+            "username",
+            "isFollowing",
+            "followersCount",
+            "followingsCount",
+            "about",
+            "profile",
+            "date_joined"
+        ]
 
     def is_following_user(self , obj):
         isFollowing = False
@@ -20,6 +31,12 @@ class UserSerializer(serializers.ModelSerializer):
             pass
 
         return isFollowing
+    
+    def followers_count(self , obj):
+        return FollowUser.objects.filter(following=obj).count()
+    
+    def followings_count(self , obj):
+        return FollowUser.objects.filter(follower=obj).count()
     
 
 class CreateUserSerializer(serializers.ModelSerializer):
