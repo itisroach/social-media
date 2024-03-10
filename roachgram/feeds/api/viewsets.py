@@ -9,6 +9,8 @@ from .serializers import (
     BookmarkSerializer
     )
 
+from rest_framework import filters
+
 
 from ..models import Post , Like , Comment , Bookmark
 from rest_framework.response import Response
@@ -28,10 +30,9 @@ class PostCursorPagination(CursorPagination):
 
 # GET , POST , DELETE
 class PostViews(APIView , PostCursorPagination):
-
     # getting all posts
     def get(self , request , format=None):
-
+        
         posts = Post.objects.all()
         # gets paginated query set
 
@@ -121,7 +122,14 @@ class PostViews(APIView , PostCursorPagination):
         # if user not provided jwt token in header
         else:
             raise NotAuthenticated
-        
+
+
+class SearchView(ListAPIView):
+    queryset = Post.objects.all()
+    serializer_class = PostSerializer
+    filter_backends = [filters.SearchFilter]
+    search_fields = ["caption" , "user__username"] 
+    pagination_class = PostCursorPagination
 
 # getting single post
 class PostDetailView(RetrieveAPIView):
