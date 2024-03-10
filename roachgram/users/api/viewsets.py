@@ -16,6 +16,7 @@ from rest_framework.generics import UpdateAPIView , ListAPIView , RetrieveAPIVie
 from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.pagination import CursorPagination
+from rest_framework.filters import SearchFilter
 
 class MyTokenSerializer(TokenObtainPairSerializer):
     @classmethod
@@ -27,6 +28,7 @@ class MyTokenSerializer(TokenObtainPairSerializer):
         token['username'] = user.username
         token["profile"]  = user.profile.url
         token["about"]    = user.about
+        token["email"]    = user.email
 
         return token
     
@@ -42,6 +44,8 @@ class UserCursorPagination(CursorPagination):
 class AllUsers(ListAPIView):
     serializer_class = UserSerializer
     queryset = User.objects.all()
+    filter_backends = [SearchFilter,]
+    search_fields = ["username" , "name" , "about"]
     pagination_class = UserCursorPagination
 
     
