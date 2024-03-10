@@ -3,6 +3,7 @@ from . import viewsets
 
 urlpatterns = [
     path("" , viewsets.PostViews.as_view() ,name="api-posts"),
+    path("find", viewsets.SearchView.as_view(), name="api-search"),
     path("<int:pk>" , viewsets.PostDetailView.as_view() , name="api-post-detail"),
     path("<int:pk>/comments" , viewsets.CommentView.as_view() , name="api-comment"),
     path("users/<str:username>" , viewsets.UserPostListView.as_view() , name="api-user-post"),
