@@ -11,8 +11,9 @@ from .serializers import (
 
 from rest_framework import filters
 
-
+from django.db.models import Q
 from ..models import Post , Like , Comment , Bookmark
+from users.models import FollowUser
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.parsers import FormParser , MultiPartParser
@@ -33,8 +34,19 @@ class PostViews(APIView , PostCursorPagination):
     # getting all posts
     def get(self , request , format=None):
         
-        posts = Post.objects.all()
+        if request.user.is_authenticated:
+            condition1 = Q(user=request.user)
+            condition2 = Q(user__in=FollowUser.objects.filter(follower=request.user).values_list('following'))
+            condition3 = Q(isReply=False)
+            posts = Post.objects.filter((condition1 | condition2) & condition3)
+            print("filtered")
+
+
+        else:
+            print("all")
+            posts = Post.objects.all()
         # gets paginated query set
+
 
         result = self.paginate_queryset(posts , request , view=self)
 
