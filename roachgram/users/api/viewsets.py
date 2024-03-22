@@ -17,6 +17,8 @@ from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.pagination import CursorPagination
 from rest_framework.filters import SearchFilter
+from rest_framework.views import Http404
+
 
 class MyTokenSerializer(TokenObtainPairSerializer):
     @classmethod
@@ -53,6 +55,47 @@ class OneUser(RetrieveAPIView):
     serializer_class = UserSerializer
     queryset = User.objects.all()
     lookup_field = "username"
+
+class OneUserFollowers(ListAPIView):
+    serializer_class = UserSerializer
+
+    lookup_field = "username"
+
+    pagination_class = UserCursorPagination
+
+    def get_queryset(self):
+        username = self.kwargs["username"]
+        
+        try:
+            user = User.objects.get(username=username)
+
+        except User.DoesNotExist:
+            raise Http404
+
+        followers = User.objects.filter(followers__in=FollowUser.objects.filter(following=user))
+        return followers
+    
+
+class OneUserFollowings(ListAPIView):
+    serializer_class = UserSerializer
+
+    lookup_field = "username"
+
+    pagination_class = UserCursorPagination
+
+    def get_queryset(self):
+        username = self.kwargs["username"]
+
+        username = self.kwargs["username"]
+        
+        try:
+            user = User.objects.get(username=username)
+
+        except User.DoesNotExist:
+            raise Http404
+
+        followings = User.objects.filter(followings__in=FollowUser.objects.filter(follower=user))
+        return followings
 
 class RegisterUser(CreateAPIView):
     serializer_class = CreateUserSerializer

@@ -14,6 +14,8 @@ urlpatterns = [
     path("users" , viewsets.AllUsers.as_view() , name="all-users"),
     path("users/follow" , viewsets.FollowView.as_view() , name="follow-user"),
     path("users/<str:username>" , viewsets.OneUser.as_view() , name="one-user"),
+    path("users/<str:username>/followers" , viewsets.OneUserFollowers.as_view() , name="api-users-followers"),
+    path("users/<str:username>/followings" , viewsets.OneUserFollowings.as_view() , name="api-users-followings"),
     
     # JWT authentication
     path('login', viewsets.MyToken.as_view(), name='token_obtain_pair'),
