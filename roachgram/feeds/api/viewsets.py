@@ -39,11 +39,9 @@ class PostViews(APIView , PostCursorPagination):
             condition2 = Q(user__in=FollowUser.objects.filter(follower=request.user).values_list('following'))
             condition3 = Q(isReply=False)
             posts = Post.objects.filter((condition1 | condition2) & condition3)
-            print("filtered")
 
 
         else:
-            print("all")
             posts = Post.objects.all()
         # gets paginated query set
 
