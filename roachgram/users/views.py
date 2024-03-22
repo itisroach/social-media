@@ -1,4 +1,4 @@
-from django.shortcuts import render , redirect
+from django.shortcuts import render , redirect , get_object_or_404
 from django.contrib.auth.decorators import login_required 
 from .models import User , FollowUser
 from django.contrib import messages
@@ -29,9 +29,8 @@ def registeration(request):
     return render(request , "register.html" , context)
 
 
-
 def userPage(request , username):
-    user = User.objects.get(username = username)
+    user = get_object_or_404(User , username = username)
 
 
     context = {
@@ -41,6 +40,26 @@ def userPage(request , username):
 
     return render(request , "userPage.html" , context)
 
+
+def userFollowers(request , username):
+    user = get_object_or_404(User,username=username)
+    followers = User.objects.filter(followers__in=FollowUser.objects.filter(following=user))
+
+    context = {
+        "users": followers
+    }
+
+    return render(request , "followersOrFollowings.html" , context)
+
+def userFollowings(request ,username):
+    user = get_object_or_404(User,username=username)
+    followings = User.objects.filter(followings__in=FollowUser.objects.filter(follower=user))
+    
+    context = {
+        "users": followings
+    }
+
+    return render(request , "followersOrFollowings.html" , context)
 
 @login_required()
 def updateUser(request):

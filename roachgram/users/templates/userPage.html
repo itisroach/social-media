@@ -75,8 +75,8 @@
                 </div>
             </div>
             <div class="pt-3 flex justify-start items-start w-full divide-x divide-white divide-solid">
-                <div class="text-center pr-3"><span class="font-bold text-white opacity-50">{{account.get_followers_and_followings_count.followingsCount}}</span><span class="text-white opacity-50"> Following</span></div>
-                <div class="text-center px-3"><span class="font-bold text-white opacity-50">{{account.get_followers_and_followings_count.followersCount}}</span><span class="text-white opacity-50"> Followers</span></div>
+                <a href="{% url 'user-followings-page' account.username %}" class="text-center pr-3"><span class="font-bold text-white opacity-50">{{account.get_followers_and_followings_count.followingsCount}}</span><span class="text-white opacity-50"> Following</span></a>
+                <a href="{% url 'user-followers-page' account.username %}" class="text-center px-3"><span class="font-bold text-white opacity-50">{{account.get_followers_and_followings_count.followersCount}}</span><span class="text-white opacity-50"> Followers</span></a>
             </div>
         </div>
     </div>

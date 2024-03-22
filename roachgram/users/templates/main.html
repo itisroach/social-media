@@ -22,7 +22,7 @@
                 })
             }, 3000);
         </script>
-        <ul class="fixed">
+        <ul class="fixed z-50">
         {% for message in messages %}
             <li class="alert {{ message.tags }} z-100 capitalize mt-20 text-white rounded-lg flex h-fit  absolute show flex-row items-center justify-center w-80 text-center px-5 py-2 block">{{message}}</li>
             <br>
