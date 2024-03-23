@@ -1,6 +1,11 @@
 {% load customTemplateTags %} 
 
 <div class="flex flex-col justify-center px-6 py-5">
+  {% followedTheUser user post.user as isFollowingPostAuthor %}
+
+  {% if not isFollowingPostAuthor and user.id != post.user.id %}
+    <p class="mb-2 text-xs text-gray-400">You Might Like This Post</p>
+  {% endif %}
   <a href="{% url 'user-page' username=post.user.username %}" class="flex text-white items-center gap-2">
     <img src="{{ post.user.profile.url }}" class="aspect-square object-cover w-10 rounded-full" />
     <p>{{ post.user.name }}</p>
