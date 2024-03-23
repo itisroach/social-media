@@ -61,7 +61,7 @@ RoachGram is a social media platform where users can share their thoughts and po
 
 * the authentication of this project is JWT based.
 
-* when using API if user is not logged in gets latest 15 posts and if they are logged in get posts of their followers and suggest some post to them (for detecting if a post is suggested you should check if the user is following the author of post)
+* when using API if user is not logged in gets latest 15 posts and if they are logged in get posts of their followers and suggest some posts to them (for detecting if a post is suggested or not, you should check if the user is following the author of post)
 
 * this website is hosted for free on [pythonanywhere](https://pythonanywhere.com/).
 
