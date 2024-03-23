@@ -38,7 +38,8 @@ class PostViews(APIView , PostCursorPagination):
             condition1 = Q(user=request.user)
             condition2 = Q(user__in=FollowUser.objects.filter(follower=request.user).values_list('following'))
             condition3 = Q(isReply=False)
-            posts = Post.objects.filter((condition1 | condition2) & condition3)
+            condition4 = Q(user__in=FollowUser.objects.filter(follower__in=FollowUser.objects.filter(follower=request.user).values_list("following")).values_list("following"))
+            posts = Post.objects.filter((condition1 | condition2 | condition4) & condition3)
 
 
         else:

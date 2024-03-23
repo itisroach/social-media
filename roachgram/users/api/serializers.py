@@ -25,7 +25,7 @@ class UserSerializer(serializers.ModelSerializer):
         isFollowing = False
         request = self.context.get("request")
         try:
-            FollowUser.objects.get(follower=request.user.id)
+            FollowUser.objects.get(follower=request.user.id , following=obj)
             isFollowing = True
         except FollowUser.DoesNotExist:
             pass
