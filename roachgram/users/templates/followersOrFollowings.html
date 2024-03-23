@@ -9,13 +9,13 @@
     <a href="{% url 'user-page' username=foundedUser.username %}" class="flex justify-center items-center gap-2">
         <img class="aspect-square w-14 rounded-full object-cover" src="{{foundedUser.profile.url}}" alt="">
         <div class="flex flex-col ">
+            <p>{{ foundedUser.name }}</p>
             <p class="opacity-50">@{{ foundedUser.username }}</p>
         </div>
     </a>
 
     {% if user.is_authenticated and user.id != foundedUser.id %}
         {% followedTheUser user foundedUser as isfollowingTheUser %}
-            {{ isfollowingTheUser  }}
         {% if not isfollowingTheUser %}
         <form class="-ml-16" action="{% url 'follow-user' username=foundedUser.username %}">
             <button class="px-8 w-32 py-0.5 font-medium bg-white text-black rounded-full" type="submit">
