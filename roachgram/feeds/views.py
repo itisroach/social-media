@@ -22,7 +22,12 @@ def home(request):
     condition1 = Q(user=request.user)
     condition2 = Q(user__in=FollowUser.objects.filter(follower=request.user).values_list('following'))
     condition3 = Q(isReply=False)
-    feedPosts = Post.objects.filter((condition1 | condition2) & condition3).order_by("-createdAt")
+    # get posts liked by followers of user
+    condition4 = Q(user__in=FollowUser.objects.filter(follower__in=FollowUser.objects.filter(follower = request.user).values_list("following")).values_list("following"))
+    feedPosts = Post.objects.filter((condition1 | condition2 | condition4) & condition3).order_by("-createdAt")
+
+    
+    
 
     feedPosts = Post.objects.all().order_by("-createdAt")[:15] if len(feedPosts) < 1 else feedPosts
 
