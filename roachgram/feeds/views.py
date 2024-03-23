@@ -24,7 +24,7 @@ def home(request):
     condition3 = Q(isReply=False)
     feedPosts = Post.objects.filter((condition1 | condition2) & condition3).order_by("-createdAt")
 
-    feedPosts = Post.objects.all()[:15].order_by("-createdAt") if len(feedPosts) < 1 else feedPosts
+    feedPosts = Post.objects.all().order_by("-createdAt")[:15] if len(feedPosts) < 1 else feedPosts
 
     context = {
         "feedPosts": feedPosts

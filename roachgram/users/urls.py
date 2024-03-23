@@ -3,15 +3,18 @@ from . import views
 from django.contrib.auth import views as authViews
 
 urlpatterns = [
+    # auth routes
+    path("register" , views.registeration , name="register-user"),
+    path("login" , authViews.LoginView.as_view(template_name="login.html" , redirect_authenticated_user=True) , name="login-user"),
+    path("logout" , authViews.LogoutView.as_view() , name="logout-user"),
+
     path("<str:username>" , views.userPage , name="user-page"),
     path("<str:username>/follow/" , views.followUser , name="follow-user"),
     path("<str:username>/unfollow/" , views.unfollowUser , name="unfollow-user"),
     path("<str:username>/followers" , views.userFollowers , name="user-followers-page"),
     path("<str:username>/followings" , views.userFollowings , name="user-followings-page"),
-    # auth routes
-    path("register" , views.registeration , name="register-user"),
-    path("login" , authViews.LoginView.as_view(template_name="login.html" , redirect_authenticated_user=True) , name="login-user"),
-    path("logout" , authViews.LogoutView.as_view() , name="logout-user"),
+    
+    
 
     # profile route
     path("profile/",  views.updateUser , name="update-user"),
