@@ -9,7 +9,6 @@
     <a href="{% url 'user-page' username=foundedUser.username %}" class="flex justify-center items-center gap-2">
         <img class="aspect-square w-14 rounded-full object-cover" src="{{foundedUser.profile.url}}" alt="">
         <div class="flex flex-col ">
-            <p>{{ foundedUser.name }}</p>
             <p class="opacity-50">@{{ foundedUser.username }}</p>
         </div>
     </a>
