@@ -24,6 +24,10 @@ RoachGram is a social media platform where users can share their thoughts and po
 
 * ##### get single user enpoint: api/auth/users/<username>
 
+* ##### get single user followers endpoint: api/auth/users/<useranme>/followers
+
+* ##### get single user followings endpoint: api/auth/users/<username>/followings
+
 * ##### get all posts: api/posts/ (depends on user's followings) 
 
 * ##### search posts: api/posts/find?search=(search query)
@@ -56,6 +60,8 @@ RoachGram is a social media platform where users can share their thoughts and po
 * main purpose of this project is to improve my skills and learn new things as a junior programmer.
 
 * the authentication of this project is JWT based.
+
+* when using API if user is not logged in gets latest 15 posts and if they are logged in get posts of their followers and suggest some posts to them (for detecting if a post is suggested or not, you should check if the user is following the author of post)
 
 * this website is hosted for free on [pythonanywhere](https://pythonanywhere.com/).
 
