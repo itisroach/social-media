@@ -1,6 +1,6 @@
 # RoachGram
 
-RoachGram is a social media platform where users can share their thoughts and post whatever they like and interact whit each other.
+RoachGram is a social media platform where users can share their thoughts and posts and whatever they like also can interact with each other.
 
 
 
