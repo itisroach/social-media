@@ -14,6 +14,8 @@ class MediaSerializer(serializers.ModelSerializer):
         for file in files:
             Media.objects.create(post=postInstance , file=file)
 
+
+
 class CommentSerializer(serializers.ModelSerializer):
 
     class Meta:
@@ -86,7 +88,12 @@ class PostSerializer(serializers.ModelSerializer):
     def bookmarks_count(self , obj):
         return Bookmark.objects.filter(post=obj).count()
         
-
+class GetCommentSerializer(serializers.ModelSerializer):
+    user = UserSerializer(read_only=True)
+    repliedTo = PostSerializer(read_only=True)
+    class Meta:
+        model = Comment
+        fields = "__all__"
 
 class CreatePostSerializer(serializers.ModelSerializer):
     class Meta:
