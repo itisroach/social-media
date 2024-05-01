@@ -31,7 +31,8 @@ def followedTheUser(follower , following):
 @register.filter(name="findMention" , is_safe=True)
 @stringfilter
 def findMention(caption: str):
-    caption = re.sub(r'@(\w+)', r'<a class="text-blue-400" href="/users/@\1">@\1</a>', caption)
+    caption = re.sub(r'@(\w+)', r'<a class="text-blue-400" href="/users/\1">@\1</a>', caption)
+
     return caption
 
 

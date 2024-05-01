@@ -48,9 +48,9 @@ class Media(models.Model):
         image = Image.open(self.file)
         if image.width > 200 and image.height > 200:
             imageSize = (500 , 500)
-            resizedImage = image.resize(imageSize)
+            image.thumbnail(imageSize , Image.Resampling.LANCZOS)
 
-            resizedImage.save(self.file.path , "JPEG" , optimize=True)
+            image.save(self.file.path , "JPEG")
 
 
     def __str__(self) -> str:

@@ -1,7 +1,6 @@
 from django.db.models.signals import pre_delete
 from django.dispatch import receiver
 from .models import Post
-import os
 # import delete file function from users app signals
 from users.signals import deleteFile
 

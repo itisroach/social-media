@@ -1,3 +1,4 @@
+from django.db.models.query import QuerySet
 from django.shortcuts import render , redirect , get_object_or_404
 from django.contrib.auth.decorators import login_required 
 from .models import User , FollowUser
@@ -7,6 +8,8 @@ from django.contrib.auth import login
 from django.contrib.auth import update_session_auth_hash
 from django.contrib.auth.views import PasswordResetView
 from django.contrib.messages.views import SuccessMessageMixin
+from django.views.generic import ListView
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse_lazy
 
 def registeration(request):
@@ -27,6 +30,7 @@ def registeration(request):
         "htmlTitle": "Register New Account"
     }
     return render(request , "register.html" , context)
+
 
 
 def userPage(request , username):

@@ -44,8 +44,3 @@ class FollowUser(models.Model):
         return f"{self.follower.username} following {self.following.username}"
     
 
-class Notifications(models.Model):
-    user = models.ForeignKey(User , on_delete=models.CASCADE , related_name="users_notification")
-    message = models.TextField(max_length=255)
-    createdAt = models.TimeField(auto_now_add=True)
-    is_read = models.BooleanField(default=False)
