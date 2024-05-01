@@ -14,6 +14,8 @@ urlpatterns = [
     path("users" , viewsets.AllUsers.as_view() , name="all-users"),
     path("users/follow" , viewsets.FollowView.as_view() , name="follow-user"),
     path("users/<str:username>" , viewsets.OneUser.as_view() , name="one-user"),
+    path("users/<str:username>/likes" , viewsets.OneUserLikes.as_view() , name="api-user-likes"),
+    path("users/<str:username>/replies" , viewsets.OneUserReplies.as_view() , name="api-user-replies"),
     path("users/<str:username>/followers" , viewsets.OneUserFollowers.as_view() , name="api-users-followers"),
     path("users/<str:username>/followings" , viewsets.OneUserFollowings.as_view() , name="api-users-followings"),
     

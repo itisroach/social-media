@@ -18,7 +18,9 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.pagination import CursorPagination
 from rest_framework.filters import SearchFilter
 from rest_framework.views import Http404
-
+from feeds.api.serializers import PostSerializer , GetCommentSerializer
+from feeds.models import Like , Post , Comment
+from feeds.api.viewsets import PostCursorPagination
 
 class MyTokenSerializer(TokenObtainPairSerializer):
     @classmethod
@@ -85,8 +87,6 @@ class OneUserFollowings(ListAPIView):
 
     def get_queryset(self):
         username = self.kwargs["username"]
-
-        username = self.kwargs["username"]
         
         try:
             user = User.objects.get(username=username)
@@ -96,6 +96,47 @@ class OneUserFollowings(ListAPIView):
 
         followings = User.objects.filter(followings__in=FollowUser.objects.filter(follower=user))
         return followings
+
+
+class OneUserLikes(ListAPIView):
+    pagination_class = PostCursorPagination
+    serializer_class = PostSerializer
+    lookup_field = "username"
+
+    def get_queryset(self):
+        username = self.kwargs["username"]
+        
+        try:
+            user = User.objects.get(username=username)
+
+        except User.DoesNotExist:
+            raise Http404
+        
+        LikedPosts = Post.objects.filter(post__in=Like.objects.filter(user=user.id))
+        
+
+        return LikedPosts
+        
+
+class OneUserReplies(ListAPIView):
+    pagination_class = PostCursorPagination
+    serializer_class = GetCommentSerializer
+    lookup_field = "username"
+
+    def get_queryset(self):
+        username = self.kwargs["username"]
+
+        try:
+            user = User.objects.get(username=username)
+        except User.DoesNotExist:
+            raise Http404
+        
+        replies = Comment.objects.filter(user=user)
+
+        return replies
+    
+        
+
 
 class RegisterUser(CreateAPIView):
     serializer_class = CreateUserSerializer
