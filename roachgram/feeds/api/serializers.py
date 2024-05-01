@@ -26,8 +26,23 @@ class CommentSerializer(serializers.ModelSerializer):
         return escape(value)
 
 
-class PostSerializer(serializers.ModelSerializer):
-    user = UserSerializer(read_only=True)
+class DynamicPostSerializer(serializers.ModelSerializer):
+    def __init__(self, *args, **kwargs):
+        # Don't pass the 'fields' arg up to the superclass
+        fields = kwargs.pop('fields', None)
+
+        # Instantiate the superclass normally
+        super().__init__(*args, **kwargs)
+
+        if fields is not None:
+            # Drop any fields that are not specified in the `fields` argument.
+            allowed = set(fields)
+            existing = set(self.fields)
+            for field_name in existing - allowed:
+                self.fields.pop(field_name)
+
+class PostSerializer(DynamicPostSerializer):
+    user = UserSerializer(read_only=True , fields=["id" , "name" , "username" , "profile"])
     media_url = serializers.SerializerMethodField()
     # a boolean field for knowing if logged in user liked post or not
     liked = serializers.SerializerMethodField(method_name="liked_before")
@@ -87,9 +102,12 @@ class PostSerializer(serializers.ModelSerializer):
     
     def bookmarks_count(self , obj):
         return Bookmark.objects.filter(post=obj).count()
-        
+
+
+   
 class GetCommentSerializer(serializers.ModelSerializer):
-    user = UserSerializer(read_only=True)
+    
+    user = UserSerializer(read_only=True, fields=["id" , "name" , "username" , "profile"])
     repliedTo = PostSerializer(read_only=True)
     class Meta:
         model = Comment
