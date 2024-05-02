@@ -79,7 +79,7 @@
                 <a href="{% url 'user-followers-page' account.username %}" class="text-center px-3"><span class="font-bold text-white opacity-50">{{account.get_followers_and_followings_count.followersCount}}</span><span class="text-white opacity-50"> Followers</span></a>
             </div>
         </div>
-        <div class="flex justify-center gap-44 mt-10 items-center text-white">
+        <div class="flex justify-center gap-44 mt-10 items-center text-white font-semibold">
             <a class="posts opacity-50" href="{% url 'user-page' account.username %}">Posts</a>
             <a class="replies opacity-50" href="{% url 'user-page-replies' account.username %}">Replies</a>
             <a class="likes opacity-50" href="{% url 'user-page-likes' account.username %}">Likes</a>
