@@ -14,6 +14,9 @@ from django.http import Http404
 from django.urls import reverse_lazy
 from feeds.models import Post , Like , Comment
 from django.db.models import Q
+from itertools import chain
+from operator import attrgetter
+
 def registeration(request):
     if request.method == "POST":
         form = RegisterForm(request.POST , request.FILES)
@@ -34,7 +37,6 @@ def registeration(request):
     return render(request , "register.html" , context)
 
 
-
 def userPage(request , username):
     
     try:
@@ -53,18 +55,23 @@ def userPage(request , username):
 
     return render(request , "userPage.html" , context)
 
+
+
 def userPageLikes(request , username):
     try:
         user = User.objects.get(username=username)
-        likedPosts = Post.objects.filter(post__in=Like.objects.filter(user=user))[::-1]
+        condition = Q(post__in=Like.objects.filter(user=user))
+        likedPosts = Post.objects.filter(condition & Q(isReply=False))
+        likedComments = Comment.objects.filter(condition)
+        result = sorted(list(chain(likedPosts , likedComments)) , key=attrgetter("createdAt"))
     except User.DoesNotExist:
         raise Http404
 
-    
+
 
     context = {
         "account": user,
-        "posts": likedPosts
+        "posts": result[::-1]
     }
 
 
