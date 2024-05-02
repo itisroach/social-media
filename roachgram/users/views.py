@@ -10,8 +10,10 @@ from django.contrib.auth.views import PasswordResetView
 from django.contrib.messages.views import SuccessMessageMixin
 from django.views.generic import ListView
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.http import Http404
 from django.urls import reverse_lazy
-
+from feeds.models import Post , Like , Comment
+from django.db.models import Q
 def registeration(request):
     if request.method == "POST":
         form = RegisterForm(request.POST , request.FILES)
@@ -34,16 +36,55 @@ def registeration(request):
 
 
 def userPage(request , username):
-    user = get_object_or_404(User , username = username)
+    
+    try:
+        user = User.objects.get(username=username)
+        userPosts = Post.objects.filter(Q(user=user) & Q(isReply=False)).order_by("-createdAt")
+    except User.DoesNotExist:
+        raise Http404
+
 
 
     context = {
         "account": user,
+        "posts": userPosts,
         "htmlTitle": f"{username}'s Page"
     }
 
     return render(request , "userPage.html" , context)
 
+def userPageLikes(request , username):
+    try:
+        user = User.objects.get(username=username)
+        likedPosts = Post.objects.filter(post__in=Like.objects.filter(user=user))[::-1]
+    except User.DoesNotExist:
+        raise Http404
+
+    
+
+    context = {
+        "account": user,
+        "posts": likedPosts
+    }
+
+
+    return render(request , "userPage.html" , context)
+
+
+def userPageReplies(request , username):
+    try:
+        user = User.objects.get(username=username)
+        repliedPosts = Comment.objects.filter(user=user).order_by("-createdAt")
+
+    except User.DoesNotExist:
+        raise Http404
+    
+    context = {
+        "account": user,
+        "posts": repliedPosts
+    }
+
+    return render(request , "userPage.html" , context)
 
 def userFollowers(request , username):
     user = get_object_or_404(User,username=username)
