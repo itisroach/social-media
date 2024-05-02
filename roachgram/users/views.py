@@ -63,7 +63,7 @@ def userPageLikes(request , username):
         condition = Q(post__in=Like.objects.filter(user=user))
         likedPosts = Post.objects.filter(condition & Q(isReply=False))
         likedComments = Comment.objects.filter(condition)
-        result = sorted(list(chain(likedPosts , likedComments)) , key=attrgetter("createdAt"))
+        result = sorted(list(chain(likedPosts , likedComments)) , key=attrgetter("createdAt") , reverse=True)
     except User.DoesNotExist:
         raise Http404
 
@@ -71,7 +71,7 @@ def userPageLikes(request , username):
 
     context = {
         "account": user,
-        "posts": result[::-1]
+        "posts": result
     }
 
 
