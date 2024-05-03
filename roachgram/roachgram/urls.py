@@ -24,6 +24,9 @@ urlpatterns = [
     path("users/" , include("users.urls")),
     path("" , include("feeds.urls")),
 
+    # chat urls
+    path("chats/" , include("chat.urls")),
+
     # user api routes
     path("api/auth/" , include("users.api.urls")),
 

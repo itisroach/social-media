@@ -61,6 +61,8 @@ INSTALLED_APPS = [
     "bleach",
     'django.contrib.auth',
 
+    'chat',
+
     'channels'
     
 ]
