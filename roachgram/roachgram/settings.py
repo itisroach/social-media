@@ -39,6 +39,7 @@ ALLOWED_HOSTS = ["localhost"]
 # Application definition
 
 INSTALLED_APPS = [
+    'daphne',
     'django.contrib.admin',
 
     'rest_framework',
@@ -60,11 +61,12 @@ INSTALLED_APPS = [
     "bleach",
     'django.contrib.auth',
 
+    'channels'
     
 ]
 
 
-
+ASGI_APPLICATION = "roachgram.asgi.application"
 
 REST_FRAMEWORK = {
 
