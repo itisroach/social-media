@@ -2,14 +2,29 @@
 
 {% block content %}
 <main class="">
-    <header class="w-[616px] fixed bg-gray-600 top-0 flex p-4 text-white gap-3 px-10">
-        <img src="{{receiver.profile.url}}" class="aspect-square object-cover w-20 rounded-full" />
-        <div class="flex flex-col justify-center items-center">
-            <a href="{% url 'user-page' receiver.username %}" class="hover:underline">@{{ receiver.username }}</a>
-            <p class="text-xs opacity-40">{{ receiver.name }}</p>
+    <section class="flex justify-center items-center">
+        <header class="w-[616px] fixed bg-gray-600 top-0 flex p-4 text-white gap-3 px-10">
+            <img src="{{receiver.profile.url}}" class="aspect-square object-cover w-20 rounded-full" />
+            <div class="flex flex-col justify-center items-center">
+                <a href="{% url 'user-page' receiver.username %}" class="hover:underline">@{{ receiver.username }}</a>
+                <p class="text-xs opacity-40">{{ receiver.name }}</p>
+            </div>
+        </header>
+
+        <div id="messages">
+
         </div>
-        
-    </header>
+
+        <form id="message-form" class="fixed bottom-10 m-auto flex justify-center items-center">
+            <div class="px-4 py-2 bg-gray-800 flex justify-center w-[400px] rounded-xl gap-2 items-center">
+                <input id="message-box" type="text" class="outline-none bg-transparent w-full text-white" placeholder="Write New Message" />
+                <button type="submit">
+                    <img width="24" height="24" src="https://img.icons8.com/material-rounded/24/ffffff/sent.png" alt="sent"/>
+                </button>
+            </div>
+        </form>
+    </section>
+    
 </main>
 <script>
     const chatSocket = new WebSocket("ws://" + window.location.host + "/chats/{{room_name}}/");
@@ -19,5 +34,13 @@
       chatSocket.onclose = function (e) {
         console.log("Something unexpected happened !");
       };
+      document.getElementById("message-form").addEventListener("submit" , function(e){
+        e.preventDefault()
+        const textMessage = document.getElementById("message-box").value
+        chatSocket.send(JSON.stringify({
+            message: textMessage,
+            sender: "{{user.username}}"
+        }))
+      })
 </script>
 {% endblock content %}
