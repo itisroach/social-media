@@ -1,5 +1,15 @@
 {% extends 'main.html' %}
 
 {% block content %}
-<div>this is </div>
-{% endblock %}
+<main class="text-white">
+    <header class="flex pb-5 border-b-2 border-gray-600 justify-center items-center">
+        {% for follow_instance in available_users_to_chat %}
+            <div href="" class="flex hover:bg-gray-600 w-28 cursor-pointer rounded-lg p-2 flex-col justify-center items-center">
+                <img class="aspect-square object-cover w-14 rounded-full" src="{{follow_instance.following.profile.url}}" />
+                <p class="text-gray-200 text-xs opacity-50">{{ follow_instance.following.name }}</p>
+                <a href="{% url 'user-page' follow_instance.following.username  %}" class="text-medium hover:underline">@{{ follow_instance.following.username }}</a>
+            </div>
+        {% endfor %}
+    </header>
+</main>
+{% endblock content %}
