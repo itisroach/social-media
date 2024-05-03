@@ -1,0 +1,23 @@
+{% extends 'main.html' %}
+
+{% block content %}
+<main class="">
+    <header class="w-[616px] fixed bg-gray-600 top-0 flex p-4 text-white gap-3 px-10">
+        <img src="{{receiver.profile.url}}" class="aspect-square object-cover w-20 rounded-full" />
+        <div class="flex flex-col justify-center items-center">
+            <a href="{% url 'user-page' receiver.username %}" class="hover:underline">@{{ receiver.username }}</a>
+            <p class="text-xs opacity-40">{{ receiver.name }}</p>
+        </div>
+        
+    </header>
+</main>
+<script>
+    const chatSocket = new WebSocket("ws://" + window.location.host + "/chats/{{room_name}}/");
+      chatSocket.onopen = function (e) {
+        console.log("The connection was setup successfully !");
+      };
+      chatSocket.onclose = function (e) {
+        console.log("Something unexpected happened !");
+      };
+</script>
+{% endblock content %}
