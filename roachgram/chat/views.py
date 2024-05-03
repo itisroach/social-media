@@ -4,6 +4,7 @@ from users.models import FollowUser
 from .models import Room
 from users.models import User
 from django.http import Http404
+from django.db.models import Q
 
 @login_required
 def chat(request):
@@ -24,14 +25,18 @@ def chat(request):
 @login_required
 def chatRoom(request , room_name):
     try:
-        room = Room.objects.get(name=room_name)
+        # make reverse room_name. we reverse that because there might be same room but diffrent receivers and not creating new record in db
+        reveresedRoomName = room_name.split("-")[::-1]
+        otherRoomName = "-".join(reveresedRoomName)
+        print(otherRoomName)
+        room = Room.objects.get(Q(name=room_name) | Q(name=otherRoomName))
     except Room.DoesNotExist:
         room = Room(name=room_name)
         room.save()
 
     try:
         # room name is created by sender's id (logged in user) and receiver's id and like this sender-receiver
-        receiverId = room.name.split("-")[1]
+        receiverId = room_name.split("-")[1]
         receiver = User.objects.get(id=receiverId)
     except User.DoesNotExist:
         raise Http404
