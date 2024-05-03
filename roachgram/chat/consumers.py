@@ -23,6 +23,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
             self.channel_name
         )
     
+    # receives anything that sent with send method in client side 
     async def receive(self, text_data):
         data = json.loads(text_data)
         message = data["message"]
@@ -37,6 +38,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
             }
         )
     
+    # custom event when receive happens
     async def sendMessage(self , event):
         await self.createMessage(event)
         response = {
@@ -46,6 +48,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
 
         await self.send(json.dumps({"data": response}))
 
+    # creates records at db
     @database_sync_to_async
     def createMessage(self , data):
         room = Room.objects.get(name=self.roomName)
