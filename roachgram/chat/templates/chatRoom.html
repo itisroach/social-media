@@ -3,12 +3,13 @@
 {% block content %}
 <main class="">
     <section class="flex justify-center items-center">
-        <header class="w-[616px] fixed bg-gray-800  top-0 flex p-4 text-white gap-3 px-10">
+        <header id="user-banner" class="w-[616px] fixed bg-gray-800  top-0 flex p-4 text-white gap-3 px-10">
             <img src="{{receiver.profile.url}}" class="aspect-square object-cover w-20 rounded-full" />
             <div class="flex flex-col justify-center">
                 <a href="{% url 'user-page' receiver.username %}" class="hover:underline">@{{ receiver.username }}</a>
                 <p class="text-xs opacity-40">{{ receiver.name }}</p>
             </div>
+            
         </header>
 
         <div id="messages-parent" class="mt-28 p-5 h-full w-full flex flex-col gap-5 mb-20">
@@ -59,6 +60,11 @@
     const chatSocket = new WebSocket("ws://" + window.location.host + "/chats/{{room_name}}/");
       chatSocket.onopen = function (e) {
         console.log("The connection was setup successfully !");
+        chatSocket.send(JSON.stringify({
+            type: "user_status",
+            username: "{{receiver.username}}",
+            status: true
+        }))
       };
       chatSocket.onclose = function (e) {
         console.log("Something unexpected happened !");
@@ -66,61 +72,81 @@
       document.getElementById("message-form").addEventListener("submit" , function(e){
         e.preventDefault()
         const textMessage = document.getElementById("message-box").value
-        chatSocket.send(JSON.stringify({
-            message: textMessage,
-            sender: "{{user.username}}"
-        }))
       })
 
     // listens for response from server
       chatSocket.addEventListener("message" , e =>{
-        const data = JSON.parse(e.data)["data"]
-        let sender = data["sender"]
-        let message = data["message"]
+        const data = JSON.parse(e.data)
+        console.log(data)
+        switch (data["type"]){
+            case "user_status":
+                
+                const username = data["username"]
+                const isOnline = data["is_online"]
+                
+                const userBanner = document.getElementById("user-banner")
+                const ele = document.createElement("span")
+                if (username == '{{receiver.username}}' &&  userBanner.children[1].children.length < 3) {
+                    
+                    
+                    ele.className = "user-status bg-green-600 text-white text-center text-xs rounded-lg mt-2 w-fit px-4 py-1 font-semibold"
+                    ele.textContent = isOnline ? 'Online' : null
+                    userBanner.children[1].appendChild(ele) 
+                }
+                else if (userBanner.children[1].children.length == 3) {
+                    userBanner.children[1].querySelector(".user-status").remove()
+                }
+                break;
+            case "message":
+                let sender = data["sender"]
+                let message = data["message"]
 
-        if (sender == '{{user.username}}') {
-            document.getElementById("message-box").value = ""
+                if (sender == '{{user.username}}') {
+                    document.getElementById("message-box").value = ""
+                }
+
+                // showing messages
+                const receiveElement =`
+                <div class="receive flex w-[320px] items-start gap-2.5 self-start">
+                        <img class="w-8 h-8 rounded-full aspect-square object-cover" src="{{receiver.profile.url}}" alt="Jese image">
+                        <div class="flex flex-col gap-1 w-full max-w-[320px]">
+                            <div class="flex items-center space-x-2 rtl:space-x-reverse">
+                                <span class="text-sm font-semibold text-gray-900 dark:text-white">{{receiver.name}}</span>
+                                <span class="text-sm font-normal text-gray-500 dark:text-gray-400">{% now "H:i" %}</span>
+                            </div>
+                            <div class="flex flex-col leading-1.5 p-4 border-gray-200 bg-gray-100 rounded-e-xl rounded-es-xl dark:bg-gray-900">
+                                <p class="text-sm font-normal text-gray-900 dark:text-white">${message}</p>
+                            </div>
+                        </div>
+                </div>`
+
+                const sendElement = `
+                    <div class="send flex w-[320px] items-start self-end flex flex-row-reverse gap-2.5">
+                        <img class="w-8 h-8 rounded-full float-right aspect-square object-cover" src="{{user.profile.url}}" alt="">
+                        <div class="flex flex-col gap-1">
+                            <div class="flex self-end items-center space-x-2 rtl:space-x-reverse">
+                                <span class="text-sm font-normal text-gray-500 dark:text-gray-400">{% now "H:i" %}</span>
+                                <span class="text-sm font-semibold text-gray-900 dark:text-white">{{ user.name }}</span>
+                            </div>
+                            <div class="flex flex-col leading-1.5 p-4 border-gray-200 bg-gray-100 rounded-l-xl rounded-r-xl rounded-tr-none dark:bg-gray-900">
+                                <p class="text-sm font-normal text-gray-900 dark:text-white">${message}</p>
+                            </div>
+                        </div>
+                    </div>
+                `
+
+                var messageParent = document.getElementById("messages-parent")
+                if (sender != '{{user.username}}') {
+                    messageParent.innerHTML += receiveElement
+                }
+                else{
+                    messageParent.innerHTML += sendElement
+                }
+                window.scrollTo(0, document.body.scrollHeight);
+                break;
         }
-
-        // showing messages
-        const receiveElement =`
-        <div class="receive flex w-[320px] items-start gap-2.5 self-start">
-                <img class="w-8 h-8 rounded-full aspect-square object-cover" src="{{receiver.profile.url}}" alt="Jese image">
-                <div class="flex flex-col gap-1 w-full max-w-[320px]">
-                    <div class="flex items-center space-x-2 rtl:space-x-reverse">
-                        <span class="text-sm font-semibold text-gray-900 dark:text-white">{{receiver.name}}</span>
-                        <span class="text-sm font-normal text-gray-500 dark:text-gray-400">{% now "H:i" %}</span>
-                    </div>
-                    <div class="flex flex-col leading-1.5 p-4 border-gray-200 bg-gray-100 rounded-e-xl rounded-es-xl dark:bg-gray-900">
-                        <p class="text-sm font-normal text-gray-900 dark:text-white">${message}</p>
-                    </div>
-                </div>
-        </div>`
-
-        const sendElement = `
-            <div class="send flex w-[320px] items-start self-end flex flex-row-reverse gap-2.5">
-                <img class="w-8 h-8 rounded-full float-right aspect-square object-cover" src="{{user.profile.url}}" alt="">
-                <div class="flex flex-col gap-1">
-                    <div class="flex self-end items-center space-x-2 rtl:space-x-reverse">
-                        <span class="text-sm font-normal text-gray-500 dark:text-gray-400">{% now "H:i" %}</span>
-                        <span class="text-sm font-semibold text-gray-900 dark:text-white">{{ user.name }}</span>
-                    </div>
-                    <div class="flex flex-col leading-1.5 p-4 border-gray-200 bg-gray-100 rounded-l-xl rounded-r-xl rounded-tr-none dark:bg-gray-900">
-                        <p class="text-sm font-normal text-gray-900 dark:text-white">${message}</p>
-                    </div>
-                </div>
-            </div>
-        `
-
-        var messageParent = document.getElementById("messages-parent")
-        if (sender != '{{user.username}}') {
-            messageParent.innerHTML += receiveElement
-        }
-        else{
-            console.log(message)
-            messageParent.innerHTML += sendElement
-        }
-        window.scrollTo(0, document.body.scrollHeight);
+        
+        
     })
 </script>
 {% endblock content %}
