@@ -26,9 +26,14 @@ class ChatConsumer(AsyncWebsocketConsumer):
     # receives anything that sent with send method in client side 
     async def receive(self, text_data):
         data = json.loads(text_data)
+        
         message = data["message"]
         username = data["sender"]
 
+        # we use this here because we want messages be saved in database so it will run once not per sockets
+        await self.createMessage(username , message)
+
+        # send response to client
         await self.channel_layer.group_send(
             self.roomName,
             {
@@ -40,7 +45,8 @@ class ChatConsumer(AsyncWebsocketConsumer):
     
     # custom event when receive happens
     async def sendMessage(self , event):
-        await self.createMessage(event)
+        
+        
         response = {
             "sender": event["username"],
             "message": event["message"]
@@ -50,8 +56,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
 
     # creates records at db
     @database_sync_to_async
-    def createMessage(self , data):
+    def createMessage(self , username , message):
         room = Room.objects.get(name=self.roomName)
-        sender = User.objects.get(username=data["username"])
-        new_message = Message(room=room , message=data["message"] , sender=sender)
-        new_message.save()
+        sender = User.objects.get(username=username)
+        new_message = Message.objects.create(room=room , message=message, sender=sender)
