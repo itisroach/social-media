@@ -71,6 +71,11 @@
       document.getElementById("message-form").addEventListener("submit" , function(e){
         e.preventDefault()
         const textMessage = document.getElementById("message-box").value
+        chatSocket.send(JSON.stringify({
+            type: "message",
+            message: textMessage,
+            sender: "{{user.username}}"
+        }))
       })
 
     // listens for response from server
@@ -90,7 +95,7 @@
                     
                     ele.className = "user-status bg-green-600 text-white text-center text-xs rounded-lg mt-2 w-fit px-4 py-1 font-semibold"
                     if (isOnline) {
-                        ele.textContent = 'In Chat'
+                        ele.textContent = 'Chatting'
                         userBanner.children[1].appendChild(ele) 
                     }
                     

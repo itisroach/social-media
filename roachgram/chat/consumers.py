@@ -128,11 +128,13 @@ class ChatConsumer(AsyncWebsocketConsumer):
     @database_sync_to_async
     def check_user_status(self , username):
         user   = User.objects.get(username=username)
-        status = ConnectionHistory.objects.get(user=user)
-
+        try:
+            status = ConnectionHistory.objects.get(user=user)
+        except ConnectionHistory.DoesNotExist:
+            status = None
         return {
             "type": "user_status",
-            "status": status.is_online,
-            "username": status.user.username
+            "status": status.is_online if status else False,
+            "username": status.user.username if status else username
         }
         
