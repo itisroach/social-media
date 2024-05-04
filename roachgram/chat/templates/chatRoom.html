@@ -11,7 +11,7 @@
             </div>
         </header>
 
-        <div id="messages-parent" class="mt-28 p-5 h-full w-full flex flex-col gap-5">
+        <div id="messages-parent" class="mt-28 p-5 h-full w-full flex flex-col gap-5 mb-20">
             {% for chat_message in chat_messages %}
                 {% if chat_message.sender != user %}
                 <div class="receive flex w-[320px] items-start gap-2.5 self-start">
@@ -44,8 +44,8 @@
         </div>
 
         <form id="message-form" class="fixed bottom-10 m-auto flex justify-center items-center">
-            <div class="px-4 py-2 bg-gray-800 flex justify-center w-[400px] rounded-xl gap-2 items-center">
-                <input id="message-box" type="text" class="outline-none bg-transparent w-full text-white" placeholder="Write New Message" />
+            <div class="px-4 py-2 bg-gray-800 flex h-14 max-h-32 justify-center w-[400px] rounded-xl gap-2 items-center">
+                <textarea id="message-box" type="text" class=" resize-none outline-none bg-transparent  max-h-full w-full text-white" placeholder="Write New Message"></textarea>
                 <button type="submit">
                     <img width="24" height="24" src="https://img.icons8.com/material-rounded/24/ffffff/sent.png" alt="sent"/>
                 </button>
@@ -55,6 +55,7 @@
     
 </main>
 <script>
+    window.scrollTo(0, document.body.scrollHeight);
     const chatSocket = new WebSocket("ws://" + window.location.host + "/chats/{{room_name}}/");
       chatSocket.onopen = function (e) {
         console.log("The connection was setup successfully !");
@@ -119,6 +120,7 @@
             console.log(message)
             messageParent.innerHTML += sendElement
         }
+        window.scrollTo(0, document.body.scrollHeight);
     })
 </script>
 {% endblock content %}
