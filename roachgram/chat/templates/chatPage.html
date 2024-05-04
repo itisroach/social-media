@@ -17,35 +17,37 @@
     </header>
     <section class="">
             {% for chat in chats %}
-            <a href="{% url 'chat-room' chat.name %}" class="flex items-center gap-2 hover:bg-gray-800 px-5 py-2 cursor-pointer transition-all border-b-2 border-gray-600 hover:border-none">
-                {% if chat.receiver.id != user.id %}
-                    <img class="aspect-square w-16 rounded-full object-cover" src="{{chat.receiver.profile.url}}" alt="">
-                    <div class="flex flex-col justify-center w-full">
-                        <p class="text-lg">@{{ chat.receiver.username }}</p>
-                        <p class="opacity-50 text-sm">{{ chat.receiver.name }}</p>
-                    </div>
-                    <div class="flex flex-col w-full">
-                        <p class="opacity-50 text-sm self-end">{{ chat.message_set.last.createdAt|date:"H:i" }}</p>
-                        <p class="w-full line-clamp-1">{{ chat.message }}</p>
-                    </div>
-                {% else %}
-                    <img class="aspect-square w-16 rounded-full object-cover" src="{{chat.sender.profile.url}}" alt="">
-                    <div class="flex flex-col justify-center w-full">
-                        <p class="text-lg">@{{ chat.sender.username }}</p>
-                        <p class="opacity-50 text-sm">{{ chat.sender.name }}</p>
-                    </div>
-                    <div class="flex flex-col w-full">
-                        <p class="opacity-50 text-sm self-end">{{ chat.message_set.last.createdAt|date:"H:i" }}</p>
-                        <p class="w-full line-clamp-1">
-                            {% if chat.message_set.last.sender == user %}
-                            {{ chat.message_set.last.message }} (You Sent)
-                            {% else %}
-                            {{ chat.message_set.last.message }}
-                            {% endif %}
-                        </p>
-                    </div>
+            {% if chat.message_set.last %}
+                <a href="{% url 'chat-room' chat.name %}" class="flex items-center gap-2 hover:bg-gray-800 px-5 py-2 cursor-pointer transition-all border-b-2 border-gray-600 hover:border-none">
+                    {% if chat.receiver.id != user.id %}
+                        <img class="aspect-square w-16 rounded-full object-cover" src="{{chat.receiver.profile.url}}" alt="">
+                        <div class="flex flex-col justify-center w-full">
+                            <p class="text-lg">@{{ chat.receiver.username }}</p>
+                            <p class="opacity-50 text-sm">{{ chat.receiver.name }}</p>
+                        </div>
+                        <div class="flex flex-col w-full">
+                            <p class="opacity-50 text-sm self-end">{{ chat.message_set.last.createdAt|date:"H:i" }}</p>
+                            <p class="w-full line-clamp-1">{{ chat.message }}</p>
+                        </div>
+                    {% else %}
+                        <img class="aspect-square w-16 rounded-full object-cover" src="{{chat.sender.profile.url}}" alt="">
+                        <div class="flex flex-col justify-center w-full">
+                            <p class="text-lg">@{{ chat.sender.username }}</p>
+                            <p class="opacity-50 text-sm">{{ chat.sender.name }}</p>
+                        </div>
+                        <div class="flex flex-col w-full">
+                            <p class="opacity-50 text-sm self-end">{{ chat.message_set.last.createdAt|date:"H:i" }}</p>
+                            <p class="w-full line-clamp-1">
+                                {% if chat.message_set.last.sender == user %}
+                                {{ chat.message_set.last.message }} (You Sent)
+                                {% else %}
+                                {{ chat.message_set.last.message }}
+                                {% endif %}
+                            </p>
+                        </div>
+                    {% endif %}
                 {% endif %}
-            </a>
+                </a>
             {% endfor %}
     </section>
 </main>
