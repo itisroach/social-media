@@ -3,6 +3,8 @@ from users.models import User
 
 class Room(models.Model):
     name = models.CharField(max_length=256)
+    sender = models.ForeignKey(User , on_delete=models.CASCADE , null=False , related_name="sender")
+    receiver = models.ForeignKey(User , on_delete=models.CASCADE , null=False , related_name="receiver")
 
     def __str__(self) -> str:
         return self.name
