@@ -14,11 +14,11 @@ def chat(request):
         return redirect("chat-room" , f"{request.user.id}-{reciverId}")
 
     followedUsers = FollowUser.objects.filter(follower=request.user)
-    chats = Message.objects.filter(Q(room__sender=request.user) | Q(room__receiver=request.user)).order_by("-createdAt").last()
-    
+    chats = Room.objects.filter(Q(sender=request.user) | Q(receiver=request.user))
+
     context = {
         "available_users_to_chat": followedUsers,
-        "message": chats
+        "chats": chats
     }
 
     return render(request , "chatPage.html" , context)
