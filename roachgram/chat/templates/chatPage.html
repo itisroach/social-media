@@ -18,7 +18,7 @@
     <section class="">
             {% for chat in chats %}
             {% if chat.message_set.last %}
-                <a href="{% url 'chat-room' chat.name %}" class="flex items-center gap-2 hover:bg-gray-800 px-5 py-2 cursor-pointer transition-all border-b-2 border-gray-600 hover:border-none">
+                <a href="{% url 'chat-room' chat.name %}" class="flex items-center gap-2 hover:bg-gray-800 px-5 py-2 cursor-pointer transition-all border-b-2 border-gray-600 hover:border-gray-800">
                     {% if chat.receiver.id != user.id %}
                         <img class="aspect-square w-16 rounded-full object-cover" src="{{chat.receiver.profile.url}}" alt="">
                         <div class="flex flex-col justify-center w-full">
