@@ -61,9 +61,8 @@
       chatSocket.onopen = function (e) {
         console.log("The connection was setup successfully !");
         chatSocket.send(JSON.stringify({
-            type: "user_status",
             username: "{{receiver.username}}",
-            status: true
+            type: "check_user_status"
         }))
       };
       chatSocket.onclose = function (e) {
@@ -86,15 +85,18 @@
                 
                 const userBanner = document.getElementById("user-banner")
                 const ele = document.createElement("span")
-                if (username == '{{receiver.username}}' &&  userBanner.children[1].children.length < 3) {
+                if (username == '{{receiver.username}}' && userBanner.children[1].children.length <= 3) {
                     
                     
                     ele.className = "user-status bg-green-600 text-white text-center text-xs rounded-lg mt-2 w-fit px-4 py-1 font-semibold"
-                    ele.textContent = isOnline ? 'Online' : null
-                    userBanner.children[1].appendChild(ele) 
-                }
-                else if (userBanner.children[1].children.length == 3) {
-                    userBanner.children[1].querySelector(".user-status").remove()
+                    if (isOnline) {
+                        ele.textContent = 'In Chat'
+                        userBanner.children[1].appendChild(ele) 
+                    }
+                    
+                    else if (userBanner.children[1].children.length == 3){
+                        userBanner.children[1].querySelector(".user-status").remove()
+                    }   
                 }
                 break;
             case "message":
