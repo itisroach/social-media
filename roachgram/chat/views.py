@@ -28,7 +28,11 @@ def chat(request):
 def chatRoom(request , room_name):
     try:
         # room name is created by sender's id (logged in user) and receiver's id and like this sender-receiver
-        receiverId = room_name.split("-")[1]
+        ids = room_name.split("-")
+        # remove logged in user from ids list
+        ids.remove(str(request.user.id))
+        # 1 item will remain which is another user excep logged in user
+        receiverId = ids[0]
         receiver = User.objects.get(id=receiverId)
     except User.DoesNotExist:
         raise Http404
