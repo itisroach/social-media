@@ -19,3 +19,11 @@ class Message(models.Model):
 
     def __str__(self) -> str:
         return f'{self.sender.username} sent to {self.room.name}'
+    
+
+class ConnectionHistory(models.Model):
+    user = models.ForeignKey(User , on_delete=models.CASCADE)
+    is_online = models.BooleanField(default=False)
+
+    def __str__(self) -> str:
+        return f"{self.user.username} is {'Online' if self.is_online else 'Offline'}"
