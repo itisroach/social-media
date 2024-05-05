@@ -59,6 +59,9 @@ class NotificationType(models.Model):
     )
     text = models.TextField()
 
+    def __str__(self) -> str:
+        return f"{self.type} - {self.text}"
+
 class Notification(models.Model):
     user_to_notif = models.ForeignKey(User , on_delete=models.CASCADE)
     notif_type = models.ForeignKey(NotificationType , on_delete=models.CASCADE)
@@ -66,4 +69,4 @@ class Notification(models.Model):
     seen = models.BooleanField(default=False)
 
     def __str__(self) -> str:
-        return f"notification for {self.user.username}"
+        return f"notification for {self.user_to_notif.username}"
