@@ -12,7 +12,8 @@ import os
 from channels.routing import ProtocolTypeRouter , URLRouter
 from django.core.asgi import get_asgi_application
 from channels.auth import AuthMiddlewareStack
-from chat import routing
+from chat import routing as chat_routing
+from users import routing as notif_routing
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'roachgram.settings')
 
 django_asgi_app = get_asgi_application()
@@ -21,7 +22,8 @@ application = ProtocolTypeRouter({
     "http": django_asgi_app,
     "websocket": AuthMiddlewareStack(
         URLRouter(
-            routing.websocket_urlpatterns
+            chat_routing.websocket_urlpatterns+
+            notif_routing.websocket_urlpatterns
         )
     )
 })
