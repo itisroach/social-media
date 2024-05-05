@@ -5,6 +5,7 @@ from .models import Room , Message
 from users.models import User
 from django.http import Http404
 from django.db.models import Q
+from django.contrib import messages as message_generator
 
 @login_required
 def chat(request):
@@ -26,9 +27,15 @@ def chat(request):
 
 @login_required
 def chatRoom(request , room_name):
+    
     try:
         # room name is created by sender's id (logged in user) and receiver's id and like this sender-receiver
         ids = room_name.split("-")
+        print(ids , request.user.id)
+        # pervent user to access rooms that not in them
+        if str(request.user.id) not in ids:
+            message_generator.error(request , "You Don't Have Permission")
+            return redirect("chat-page")
         # remove logged in user from ids list
         ids.remove(str(request.user.id))
         # 1 item will remain which is another user excep logged in user
