@@ -44,3 +44,26 @@ class FollowUser(models.Model):
         return f"{self.follower.username} following {self.following.username}"
     
 
+class NotificationType(models.Model):
+    TYPE_CHOICES = (
+        ("LIKE" , "Like"),
+        ("COMMENT" , "Comment"),
+        ("MENTION" , "Mention"),
+        ("FOLLOW" , "Follow"),
+        ("MESSAGE" , "Message"),
+        ("BOOKMARK" , "Bookmark")
+    )
+    type = models.CharField(
+        choices=TYPE_CHOICES,
+        max_length=128
+    )
+    text = models.TextField()
+
+class Notification(models.Model):
+    user_to_notif = models.ForeignKey(User , on_delete=models.CASCADE)
+    notif_type = models.ForeignKey(NotificationType , on_delete=models.CASCADE)
+    triggered_by = models.ForeignKey(User , on_delete=models.CASCADE , related_name="triggered_by")
+    seen = models.BooleanField(default=False)
+
+    def __str__(self) -> str:
+        return f"notification for {self.user.username}"
