@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 import auto_prefetch
+from datetime import datetime
 # Create your models here.
 
 def user_profile_directory(instance , filename):
@@ -67,6 +68,7 @@ class Notification(models.Model):
     notif_type = models.ForeignKey(NotificationType , on_delete=models.CASCADE)
     triggered_by = models.ForeignKey(User , on_delete=models.CASCADE , related_name="triggered_by")
     seen = models.BooleanField(default=False)
+    createdAt = models.DateTimeField(auto_now_add=True)
 
     def __str__(self) -> str:
         return f"notification for {self.user_to_notif.username}"
