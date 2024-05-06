@@ -1,0 +1,26 @@
+{% extends "main.html" %}
+
+{% block content %}
+
+<section class="text-white">
+    {% for notification in notifications %}
+        <div class="border-b-2 relative {% if notification.seen %} border-gray-500 hover:border-gray-800 hover:bg-gray-800 {% else %} hover:bg-gray-600 bg-gray-800 border-gray-600 hover:border-gray-600 {% endif %} transition-all  flex items-center gap-2 p-5">
+            {% if not notification.seen %}
+                <span class="bg-blue-500 rounded-lg text-xs mr-2 px-2 py-1 text-white">New</span>
+            {% endif %}
+            <img class="aspect-square w-16 rounded-full object-cover" src="{{notification.triggered_by.profile.url}}" />
+            <div class="flex flex-col justify-center">
+                <a class="hover:underline text-lg" href="{% url 'user-page' notification.triggered_by.username %}">@{{ notification.triggered_by.username }}</a>
+                <p class="text-white opacity-50 text-sm">{{ notification.triggered_by.name }}</p>
+            </div>
+            <p class="text-base ml-5 capitalize">{{notification.triggered_by.name}} {{ notification.notif_type.text }}</p>
+            <p class="text-xs absolute bottom-2 right-5 font-semibold opacity-50">{{ notification.createdAt|timesince }} ago</p>
+        </div>
+    {% endfor %}
+</section>
+
+<script>
+    localStorage.removeItem("notif_count")
+</script>
+
+{% endblock content %}
