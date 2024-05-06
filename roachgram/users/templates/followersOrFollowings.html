@@ -17,7 +17,7 @@
     {% if user.is_authenticated and user.id != foundedUser.id %}
         {% followedTheUser user foundedUser as isfollowingTheUser %}
         {% if not isfollowingTheUser %}
-        <form class="-ml-16" action="{% url 'follow-user' username=foundedUser.username %}">
+        <form onsubmit="sendNotif('{{userToFollow.username}}' , 'follow')" class="-ml-16" action="{% url 'follow-user' username=foundedUser.username %}">
             <button class="px-8 w-32 py-0.5 font-medium bg-white text-black rounded-full" type="submit">
                 Follow
             </button>
@@ -36,4 +36,7 @@
 </div>
 <hr class="border-gray-600">
 {% endfor %}
+{% if not users %}
+<h1 class="text-white text-center mt-80 text-3xl">There Are No Users In Here</h1>
+{% endif %}
 {% endblock %}

@@ -32,7 +32,7 @@
                             </button>
                         </form>
                     {% else %}
-                        <form method="post" action="{% url 'follow-user' account.username %}">
+                        <form method="post" onsubmit="sendNotif('{{userToFollow.username}}' , 'follow')" action="{% url 'follow-user' account.username %}">
                             {% csrf_token %}
                             <button type="submit" class="w-[102px] flex justify-center  max-h-max whitespace-nowrap focus:outline-none  focus:ring  rounded max-w-max border bg-transparent border-blue-500 text-blue-500 hover:border-blue-800 hover:bg-blue-800 hover:text-white transition flex items-center hover:shadow-lg font-bold py-2 px-4 rounded-full mr-0 ml-auto">
                                 Follow
@@ -100,14 +100,13 @@
     {% endfor %}
 
     {% else %}
-    <h1 class="text-white absolute ml-44 text-center text-3xl mt-44">There Is Nothing Here</h1>
+    <h1 class="text-white text-center mt-40 text-3xl">There Is Nothing Here</h1>
     {% endif %}
 
 
 <script>
     const urlLastPart = window.location.href.substring(window.location.href.lastIndexOf("/") + 1)
     const styles = ["pb-1", "opacity-100" ,"border-b-2" ,"border-blue-500"]
-    console.log(urlLastPart)
     switch (urlLastPart) {
         case "likes":
             styles.forEach(style => {
