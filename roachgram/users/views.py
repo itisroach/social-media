@@ -1,7 +1,7 @@
 from django.db.models.query import QuerySet
 from django.shortcuts import render , redirect , get_object_or_404
 from django.contrib.auth.decorators import login_required 
-from .models import User , FollowUser
+from .models import User , FollowUser , Notification , NotificationType
 from django.contrib import messages
 from .forms import RegisterForm , UpdateUserForm
 from django.contrib.auth import login
@@ -133,7 +133,6 @@ def followUser(request , username):
     # check if user exists in database
     
     try:
-        global user
         user = User.objects.get(username=username)
     except User.DoesNotExist:
         messages.error(request , "user not found")
@@ -142,6 +141,7 @@ def followUser(request , username):
     if (request.user.id == user.id):
         messages.error(request , "you can't follow yourself")
         return redirect("user-page" , user.username)  
+    
     # checks for user if it's already following
     isFollowing = FollowUser.objects.filter(follower=request.user, following = user).exists()
 
@@ -180,6 +180,14 @@ def unfollowUser(request , username):
     messages.success(request , f"you are now not following @{user.username}")
     return redirect("user-page" , user.username)
 
+@login_required()
+def userNotifications(request):
+    notifications = Notification.objects.filter(user_to_notif=request.user).order_by("-createdAt")
+    context = {
+        "notifications": notifications
+    }
+
+    return render(request , "notifications.html" , context)
 
 @login_required
 def changesPassword(request):
