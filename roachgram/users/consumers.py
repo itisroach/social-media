@@ -29,16 +29,15 @@ class NotificationConsumer(AsyncWebsocketConsumer):
         data = json.loads(text_data)
         reqType = data["type"]
 
-        match reqType:
-            case "follow":
-                # creates record in DB
-                new_notif_dic = await self.createNotificationInDB("follow" , data["user_to_notif"])
+        # creates record in DB
+        new_notif_dic = await self.createNotificationInDB(reqType , data["user_to_notif"])
 
-                # sends an json to user is notif is about to send
-                await self.channel_layer.group_send(
-                    data["user_to_notif"],
-                    new_notif_dic
-                )
+        # sends an json to user is notif is about to send
+        await self.channel_layer.group_send(
+            data["user_to_notif"],
+            new_notif_dic
+        )
+            
                 
     
     async def sendResponse(self , event):
