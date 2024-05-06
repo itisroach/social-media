@@ -72,7 +72,7 @@
           <div class="fixed">
             <nav class="mt-5 px-2 flex flex-col">
               <button onclick="clickedOnRoutButton(this.children)">
-                  <a href="{% url 'home-page' %}" class="group route flex items-center px-2 py-2 text-base leading-6 font-semibold rounded-full hover:bg-gray-800 hover:text-gray-300">
+                  <a href="{% url 'home-page' %}" id="home" class="group route flex items-center px-2 py-2 text-base leading-6 font-semibold rounded-full hover:bg-gray-800 hover:text-gray-300">
                       <svg class="mr-4 h-8 w-8 " stroke="currentColor" fill="none" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l9-9 9 9M5 10v10a1 1 0 001 1h3a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1h3a1 1 0 001-1V10M9 21h6"/>
                       </svg>
@@ -80,14 +80,14 @@
                   </a>
               </button>
               <button onclick="clickedOnRoutButton(this.children)">
-                  <a id="messages" href="{% url 'chat-page' %}" class="mt-1 group flex items-center route px-2 py-2 text-base leading-6 font-medium rounded-full hover:bg-gray-800 hover:text-gray-300">
+                  <a id="chat" href="{% url 'chat-page' %}" class="mt-1 group flex items-center route px-2 py-2 text-base leading-6 font-medium rounded-full hover:bg-gray-800 hover:text-gray-300">
                       <svg class="mr-4 h-8 w-8" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" stroke="currentColor" viewBox="0 0 24 24"><path d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
                       Chats
                     </a>
               </button>
               <button onclick="clickedOnRoutButton(this.children)">
                 
-                <a href="{% url 'notification-page' %}" class="mt-1 group relative flex items-center route px-2 py-2 text-base leading-6 font-medium rounded-full hover:bg-gray-800 hover:text-gray-300">
+                <a id="notifications" href="{% url 'notification-page' %}" class="mt-1 group relative flex items-center route px-2 py-2 text-base leading-6 font-medium rounded-full hover:bg-gray-800 hover:text-gray-300">
                   <svg class="mr-4 h-8 w-8" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" stroke="currentColor" viewBox="0 0 24 24"><path d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path></svg>
                   Notifications
                   <span class="bg-red-600 hidden absolute top-2 left-6 w-4 h-4 rounded-full text-xs text-white bg-opacity-90 flex justify-center items-center" id="notification-counter"></span>
@@ -193,7 +193,7 @@
                   <div class="flex-1 px-4 py-2 m-2">
                     {% followedTheUser user userToFollow as isFollowingTheUser %}
                     {% if not isFollowingTheUser %}
-                    <form method="post" onsubmit="sendFollowNotif('{{userToFollow.username}}')" action="{% url 'follow-user' username=userToFollow.username %}" class=" float-right">
+                    <form method="post" onsubmit="sendNotif('{{userToFollow.username}}' , 'follow')" action="{% url 'follow-user' username=userToFollow.username %}" class=" float-right">
                       {% csrf_token %}
                       <button href="" class="w-28 bg-white hover:bg-gray-500 text-black font-semibold hover:text-black py-2 px-4 border border-white hover:border-transparent rounded-full">
                         Follow
@@ -240,19 +240,66 @@
   notifSocket.addEventListener("message" , e => {
     notificationCount++
     localStorage.setItem("notif_count" , notificationCount)
-    JSON.parse(e.data)
+    data = JSON.parse(e.data)
     if (notificationCount > 0){
       notifCounter.classList.remove("hidden")
       notifCounter.textContent = notificationCount
     }
   })
 
-  const sendFollowNotif = (userToFollow) =>{
+  const sendNotif = (userToNotif , type) =>{
     notifSocket.send(JSON.stringify({
-      type: "follow",
+      type: type,
       triggered_by: "{{user.username}}",
-      user_to_notif: userToFollow
+      user_to_notif: userToNotif
     }))
+  }
+
+
+  const urlLastPartForNavigation = window.location.href.substr(window.location.href.slice(0, window.location.href.lastIndexOf("/")).lastIndexOf("/") + 1)
+  const homeButton = document.getElementById("home")
+  const chatButton = document.getElementById("chat")
+  const notificationsButton = document.getElementById("notifications")
+  const bookmarkButton = document.getElementById("bookmarks")
+  const profileButton = document.getElementById("profile")
+  console.log(urlLastPartForNavigation)
+
+  switch (urlLastPartForNavigation){
+    case "chats/":
+      homeButton.classList.remove("bg-gray-800")
+      bookmarkButton.classList.remove("bg-gray-800")
+      profileButton.classList.remove("bg-gray-800")
+      notificationsButton.classList.remove("bg-gray-800")
+      chatButton.classList.add("bg-gray-800")
+      break
+    case "{{user.username}}/":
+      homeButton.classList.remove("bg-gray-800")
+      bookmarkButton.classList.remove("bg-gray-800")
+      notificationsButton.classList.remove("bg-gray-800")
+      chatButton.classList.remove("bg-gray-800")
+      profileButton.classList.add("bg-gray-800")
+      break
+    case "mybookmarks/":
+      homeButton.classList.remove("bg-gray-800")
+      notificationsButton.classList.remove("bg-gray-800")
+      chatButton.classList.remove("bg-gray-800")
+      profileButton.classList.remove("bg-gray-800")
+      bookmarkButton.classList.add("bg-gray-800")
+      break
+    case "notifications/":
+      homeButton.classList.remove("bg-gray-800")
+      chatButton.classList.remove("bg-gray-800")
+      profileButton.classList.remove("bg-gray-800")
+      bookmarkButton.classList.remove("bg-gray-800")
+      notificationsButton.classList.add("bg-gray-800")
+      break
+    default:
+      chatButton.classList.remove("bg-gray-800")
+      profileButton.classList.remove("bg-gray-800")
+      bookmarkButton.classList.remove("bg-gray-800")
+      notificationsButton.classList.remove("bg-gray-800")
+      homeButton.classList.add("bg-gray-800")
+      break
   }
   
 </script>
