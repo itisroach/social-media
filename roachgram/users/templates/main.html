@@ -248,6 +248,7 @@
   })
 
   const sendNotif = (userToNotif , type) =>{
+    if (userToNotif == '{{user.username}}') return
     notifSocket.send(JSON.stringify({
       type: type,
       triggered_by: "{{user.username}}",

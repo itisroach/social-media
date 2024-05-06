@@ -98,7 +98,6 @@
         </a>
 
           {% liked user post as likedBefore %}
-          {% if not likedBefore %}
             <form onsubmit="sendNotif('{{post.user}}' , 'like')" method="post" action="{% url 'like-post' pk=post.id %}" class="flex-1 text-center py-2 m-2">
               {% csrf_token %}  
               
@@ -108,19 +107,7 @@
               </button>
               
             </form>
-          {% else %}
-            <form method="post" action="{% url 'like-post' pk=post.id %}" class="flex-1 text-center py-2 m-2">
-              {% csrf_token %}  
-              
-              <button type="submit" class="w-12 group flex flex-col items-center {% if likedBefore == True %} text-red-500 {% else %} text-gray-500 {% endif %} px-3 py-2 text-base leading-6 font-medium rounded-full hover:bg-gray-800 hover:text-gray-300">
-                    <svg class="text-center h-7 w-6" fill="{% if likedBefore %} red {% else %} none {% endif %}" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" stroke="currentColor" viewBox="0 0 24 24"><path d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path></svg>
-                    <p>{{post.get_like_count}}</p>
-              </button>
-              
-            </form>
-          {% endif %}
           {% bookmarked user post as bookmaredBefore %} 
-          {% if not bookmarkedBefore %}
             <form onsubmit="sendNotif('{{post.user}}' , 'bookmark')" method="post" action="{% url 'bookmark-post' pk=post.id %}" class="flex-1 text-center py-2 m-2">
               {% csrf_token %}
               <button type="submit" class="w-12 flex-col group {% if bookmaredBefore %} text-black {% else %} text-gray-500 {% endif %} flex items-center  px-3 py-2 text-base leading-6 font-medium rounded-full hover:bg-gray-800 hover:text-gray-300">
@@ -128,15 +115,6 @@
                   <p>{{post.get_bookmark_count}}</p>
               </button>
             </form>
-          {% else %}
-            <form method="post" action="{% url 'bookmark-post' pk=post.id %}" class="flex-1 text-center py-2 m-2">
-              {% csrf_token %}
-              <button type="submit" class="w-12 flex-col group {% if bookmaredBefore %} text-black {% else %} text-gray-500 {% endif %} flex items-center  px-3 py-2 text-base leading-6 font-medium rounded-full hover:bg-gray-800 hover:text-gray-300">
-                  <svg class="text-center h-7 w-6" fill="{% if bookmaredBefore %} black {% else %} none {% endif %}" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" stroke="currentColor" viewBox="0 0 24 24"><path d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z"></path></svg>
-                  <p>{{post.get_bookmark_count}}</p>
-              </button>
-            </form>
-          {% endif %}
       </div>
   </div>
 
