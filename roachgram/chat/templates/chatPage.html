@@ -14,6 +14,9 @@
                 </button>
             </form>
         {% endfor %}
+        {% if not available_users_to_chat %}
+            <p class="text-lg text-center mt-2">Start Following People To Chat With Them</p>
+        {% endif %}
     </header>
     <section class="">
             {% for chat in chats %}
@@ -56,6 +59,9 @@
                 </a>
             {% endfor %}
     </section>
+    {% if not chats %}
+        <p class="text-center text-2xl mt-80">You Didn't Chat Anyone</p>
+    {% endif %}
 </main>
 
 {% endblock content %}

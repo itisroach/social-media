@@ -2,11 +2,12 @@
 
 
 {% block  content %}
+<h1 class="text-2xl text-white font-semibold text-center mt-4">Your Bookmarks</h1>
 {% if bookmarks %}
     {% for bookmark in bookmarks %}
     {% include 'post.html' with post=bookmark.post %}
     {% endfor %}
 {% else %}
-<h1 class="text-white absolute ml-14 text-center text-3xl mt-96">You Have Not Bookmarked Any Post</h1>
+<h1 class="text-white text-center mt-80 text-3xl">You Have Not Bookmarked Any Post</h1>
 {% endif %}
 {% endblock content %}
