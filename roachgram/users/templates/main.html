@@ -51,17 +51,6 @@
 </style>
 
 <script src="{% static 'imagePreview.js' %}"></script>
-<script>
-    if (localStorage.getItem("element")){
-        const id = localStorage.getItem("element")
-        console.log(document.getElementById(id) , id)
-
-    }
-
-    const clickedOnRoutButton = (element) =>{
-        localStorage.setItem("element" , element[0].id)
-    }
-</script>
 <div class="overflow-hidden">
     <div class="flex h-full divide-x-2 divide-gray-600">
 
@@ -257,37 +246,36 @@
   }
 
 
-  const urlLastPartForNavigation = window.location.href.substr(window.location.href.slice(0, window.location.href.lastIndexOf("/")).lastIndexOf("/") + 1)
+  const url = window.location.href
   const homeButton = document.getElementById("home")
   const chatButton = document.getElementById("chat")
   const notificationsButton = document.getElementById("notifications")
   const bookmarkButton = document.getElementById("bookmarks")
   const profileButton = document.getElementById("profile")
-  console.log(urlLastPartForNavigation)
 
-  switch (urlLastPartForNavigation){
-    case "chats/":
+  switch (true){
+    case url.includes("chats"):
       homeButton.classList.remove("bg-gray-800")
       bookmarkButton.classList.remove("bg-gray-800")
       profileButton.classList.remove("bg-gray-800")
       notificationsButton.classList.remove("bg-gray-800")
       chatButton.classList.add("bg-gray-800")
       break
-    case "{{user.username}}/":
+    case url.includes("{{user.username}}"):
       homeButton.classList.remove("bg-gray-800")
       bookmarkButton.classList.remove("bg-gray-800")
       notificationsButton.classList.remove("bg-gray-800")
       chatButton.classList.remove("bg-gray-800")
       profileButton.classList.add("bg-gray-800")
       break
-    case "mybookmarks/":
+    case url.includes("mybookmarks"):
       homeButton.classList.remove("bg-gray-800")
       notificationsButton.classList.remove("bg-gray-800")
       chatButton.classList.remove("bg-gray-800")
       profileButton.classList.remove("bg-gray-800")
       bookmarkButton.classList.add("bg-gray-800")
       break
-    case "notifications/":
+    case url.includes("notifications"):
       homeButton.classList.remove("bg-gray-800")
       chatButton.classList.remove("bg-gray-800")
       profileButton.classList.remove("bg-gray-800")

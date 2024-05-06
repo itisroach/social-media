@@ -41,7 +41,12 @@
                     {% else %}
                         <img class="aspect-square w-16 rounded-full object-cover" src="{{chat.sender.profile.url}}" alt="">
                         <div class="flex flex-col justify-center w-full">
-                            <p class="text-lg">@{{ chat.sender.username }}</p>
+                            <div class="text-lg flex items-center gap-2">
+                                <p>@{{ chat.sender.username }}</p>
+                                {% if chat.sender.connectionhistory_set.last.is_online %}   
+                                    <span class="bg-green-600 text-white text-center mt-1 text-xs rounded-lg w-fit px-2 py-0.5 font-semibold">Chatting</span>
+                                {% endif %}
+                            </div>
                             <p class="opacity-50 text-sm">{{ chat.sender.name }}</p>
                         </div>
                         <div class="flex flex-col w-full">
