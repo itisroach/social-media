@@ -11,6 +11,9 @@ urlpatterns = [
     # profile route
     path("profile/",  views.updateUser , name="update-user"),
 
+    # notification route
+    path("notifications/" , views.userNotifications , name="notification-page"),
+
     # change password route
     path("change-password" , views.changesPassword , name="change-password"),
 
