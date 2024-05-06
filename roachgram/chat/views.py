@@ -7,7 +7,7 @@ from django.http import Http404
 from django.db.models import Q
 from django.contrib import messages as message_generator
 
-@login_required
+@login_required()
 def chat(request):
 
     if request.method == "POST":
@@ -25,7 +25,7 @@ def chat(request):
     return render(request , "chatPage.html" , context)
 
 
-@login_required
+@login_required()
 def chatRoom(request , room_name):
     
     try:
