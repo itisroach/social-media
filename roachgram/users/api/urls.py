@@ -13,6 +13,7 @@ urlpatterns = [
     path("change-password" , viewsets.ChangePassword.as_view() , name="api-change-password"),
     path("users" , viewsets.AllUsers.as_view() , name="all-users"),
     path("users/follow" , viewsets.FollowView.as_view() , name="follow-user"),
+    path("users/notifications/" , viewsets.Notifications.as_view() , name="api-notifications"),
     path("users/<str:username>" , viewsets.OneUser.as_view() , name="one-user"),
     path("users/<str:username>/likes" , viewsets.OneUserLikes.as_view() , name="api-user-likes"),
     path("users/<str:username>/replies" , viewsets.OneUserReplies.as_view() , name="api-user-replies"),

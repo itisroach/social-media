@@ -6,11 +6,12 @@ from .serializers import (
                         UpdateUserSeralizer , 
                         ChangePasswordSerializer ,
                         UserSerializer,
-                        FollowSerializer
+                        FollowSerializer,
+                        NotificationSerializer
                         )
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework_simplejwt.views import TokenObtainPairView
-from ..models import User , FollowUser
+from ..models import User , FollowUser , Notification as dbNotification
 from rest_framework.parsers import MultiPartParser, JSONParser
 from rest_framework.generics import UpdateAPIView , ListAPIView , RetrieveAPIView , CreateAPIView
 from rest_framework.views import APIView
@@ -45,6 +46,11 @@ class UserCursorPagination(CursorPagination):
     ordering = "-date_joined"
     page_size = 10
 
+
+class NotificationCursorPaginations(CursorPagination):
+    ordering = "-createdAt"
+    page_size = 10
+
 class AllUsers(ListAPIView):
     serializer_class = UserSerializer
     queryset = User.objects.all()
@@ -57,6 +63,14 @@ class OneUser(RetrieveAPIView):
     serializer_class = UserSerializer
     queryset = User.objects.all()
     lookup_field = "username"
+
+class Notifications(ListAPIView):
+    permission_classes = [IsAuthenticated,]
+    pagination_class = NotificationCursorPaginations
+    serializer_class = NotificationSerializer
+
+    def get_queryset(self):
+        return dbNotification.objects.filter(user_to_notif=self.request.user)
 
 class OneUserFollowers(ListAPIView):
     serializer_class = UserSerializer

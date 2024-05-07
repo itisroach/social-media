@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from ..models import User , FollowUser
+from ..models import User , FollowUser , Notification , NotificationType
 from rest_framework.decorators import parser_classes
 from rest_framework.parsers import MultiPartParser , FormParser , JSONParser , FileUploadParser
 
@@ -61,7 +61,18 @@ class CreateUserSerializer(serializers.ModelSerializer):
         fields = ["name" , "username" , "about" , "password" , "email" , "profile"]
 
 
+class NotificationTypeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = NotificationType
+        fields = "__all__"
 
+class NotificationSerializer(serializers.ModelSerializer):
+    user_to_notif = UserSerializer(fields=["id" ,"username" , "name" , "profile"])
+    triggered_by = UserSerializer(fields=["id" ,"username" , "name" , "profile"])
+    notif_type  = NotificationTypeSerializer()
+    class Meta:
+        model = Notification
+        fields = "__all__"
     
 class UpdateUserSeralizer(serializers.ModelSerializer):
     class Meta:
