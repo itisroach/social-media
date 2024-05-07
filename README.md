@@ -8,50 +8,60 @@ RoachGram is a social media platform where users can share their thoughts and po
 
 * #### this porject also has API endpoints for authentication, creating posts, etc....
 
-* ##### regiseter endpoint: /api/auth/register
+* ##### regiseter endpoint: /api/auth/register/
 
-* ##### login endpoint: api/auth/login
+* ##### login endpoint: /api/auth/login/
 
-* ##### chanege user information endpoint: api/auth/edit-user
+* ##### chanege user information endpoint: /api/auth/edit-user/
 
-* ##### change user password: api/auth/change-password
+* ##### change user password: /api/auth/change-password/
 
-* ##### get all users: api/auth/users
+* ##### get all users: /api/users/
 
-* ##### search users: api/auth/users?search=(search query)
+* ##### get user's notifications: /api/users/notifications/
 
-* ##### following and unfollowing an user endpoint: api/auth/follow (if already followed it will unfollow)
+* ##### search users: /api/users?search=(search query)/
 
-* ##### get single user enpoint: api/auth/users/<username>
+* ##### following and unfollowing an user endpoint: /api/auth/follow/ (if already followed it will unfollow)
 
-* ##### get single user followers endpoint: api/auth/users/<useranme>/followers
+* ##### get single user enpoint: /api/users/<username>/
 
-* ##### get single user followings endpoint: api/auth/users/<username>/followings
+* ##### get single user followers endpoint: /api/users/<useranme>/followers/
 
-* ##### get all posts: api/posts/ (depends on user's followings) 
+* ##### get single user followings endpoint: /api/users/<username>/followings/
 
-* ##### search posts: api/posts/find?search=(search query)
+* ##### get all posts: /api/posts/ (depends on user's followings) 
 
-* ##### creating a post: api/posts/ (POST METHOD)
+* ##### search posts: /api/posts/find?search=(search query)
 
-* ##### deleting a post: api/posts/ (DELETE METHOD)
+* ##### creating a post: /api/posts/ (POST METHOD)
 
-* ##### get single post: api/posts/(id)
+* ##### deleting a post: /api/posts/ (DELETE METHOD)
 
-* ##### get post's comments: api/posts/(id)/comments
+* ##### get single post: /api/posts/(id)
 
-* ##### creating a comment: api/posts/(id)/comments (POST METHOD)
+* ##### get post's comments: /api/posts/(id)/comments
 
-* ##### deleting a comment: api/posts/(id)/comments (DELETE METHOD)
+* ##### creating a comment: /api/posts/(id)/comments (POST METHOD)
 
-* ##### get an user's posts: api/posts/users/(username)
+* ##### deleting a comment: /api/posts/(id)/comments (DELETE METHOD)
 
-* ##### like and unlike a post: api/posts/like (POST METHOD AND IF ALREADY LIKED IT WILL UNLIKE IT)
+* ##### get an user's posts: /api/posts/users/(username)
 
-* ##### bookmark and remove bookmark of a post: api/posts/bookmark (POST METHOD AND IFALREADY BOOKMARKED IT WILL REMOVE FROM BOOKMARKS)
+* ##### like and unlike a post: /api/posts/like (POST METHOD AND IF ALREADY LIKED IT WILL UNLIKE IT)
+
+* ##### bookmark and remove bookmark of a post: /api/posts/bookmark (POST METHOD AND IFALREADY BOOKMARKED IT WILL REMOVE FROM BOOKMARKS)
+
+## websocket urls:
+
+* ##### /chats/<room name>/ (room name contains logged in user id and user the logged in user wants to chat wit, like this: "LOGGEDINUSER-ANOTHERUSER")
+
+* #### /notifications/<username>/ always connected to this for receiving realtime notifications and send request to add notification in these actions -> ["follow" , "like" , "comment" , "bookmark"]. data needed for this route is =>  type: on of previous listed request, user_to_notif: user we want to send notification to, triggered_by: user who performed action  
+
+* #### /notification/<username>/<last-notif-id>/seen/ when user enters to notification page send request with last notification id to mark notification as seen. no data needed except those in url 
 
 
-* #### RoachGram is live on: [https://roach.pythonanywhere.com/](https://roach.pythonanywhere.com/)
+* #### RoachGram is live on: [https://amiraliashoori6.pythonanywhere.com/](https://amiraliashoori6.pythonanywhere.com/)
 
 # Notes
 
