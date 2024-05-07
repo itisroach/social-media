@@ -19,6 +19,8 @@ class NotificationConsumer(AsyncWebsocketConsumer):
 
         await self.accept()
 
+        
+
     async def disconnect(self, code):
         await self.channel_layer.group_discard(
             self.username,
@@ -27,23 +29,37 @@ class NotificationConsumer(AsyncWebsocketConsumer):
 
     async def receive(self, text_data):
         data = json.loads(text_data)
+        print(data)
         reqType = data["type"]
+        match reqType:
+            case "check_notifs":
+                new_notif_count_dic = await self.check_unread_notification()
+                await self.channel_layer.group_send(
+                    self.username,
+                    new_notif_count_dic
+                )
+            case _:
+                # creates record in DB
+                new_notif_dic = await self.createNotificationInDB(reqType , data["user_to_notif"])
 
-        # creates record in DB
-        new_notif_dic = await self.createNotificationInDB(reqType , data["user_to_notif"])
-
-        # sends an json to user is notif is about to send
-        await self.channel_layer.group_send(
-            data["user_to_notif"],
-            new_notif_dic
-        )
+                # sends an json to user is notif is about to send
+                await self.channel_layer.group_send(
+                    data["user_to_notif"],
+                    new_notif_dic
+                )
             
                 
     
     async def sendResponse(self , event):
         response = {
-            "type": "follow",
             "message": event["message"]
+        }
+
+        await self.send(json.dumps(response))
+
+    async def sendCheckResponse(self , event):
+        response = {
+            "notif_count": event["notif_count"]
         }
 
         await self.send(json.dumps(response))
@@ -58,6 +74,14 @@ class NotificationConsumer(AsyncWebsocketConsumer):
             "message": f'{self.user.username} {newNotif.notif_type.text}' 
         }
     
+    @database_sync_to_async
+    def check_unread_notification(self):
+        newNotifCount = Notification.objects.filter(user_to_notif=self.user , seen=False).count()
+        return {
+            "type": "sendCheckResponse",
+            "notif_count": newNotifCount
+        }
+
 
 class SeenNotificationConsumer(AsyncWebsocketConsumer):
 
@@ -67,7 +91,7 @@ class SeenNotificationConsumer(AsyncWebsocketConsumer):
         self.username = self.scope["url_route"]["kwargs"]["username"]
 
         await self.channel_layer.group_add(
-            self.username,
+            f'{self.user.id}{self.user.username}',
             self.channel_name
         )
 
@@ -75,7 +99,7 @@ class SeenNotificationConsumer(AsyncWebsocketConsumer):
     
     async def disconnect(self, code):
         await self.channel_layer.group_discard(
-            self.username,
+            f'{self.user.id}{self.user.username}',
             self.channel_name
         )
 

@@ -210,6 +210,7 @@
   const notifSocket = new WebSocket("ws://" + window.location.host + "/notification/{{user.username}}/")
   notifSocket.onopen = (e) =>{
     console.log("notif socket is open")
+    notifSocket.send(JSON.stringify({type: "check_notifs"}))
   }
   notifSocket.onclose = (e) => {
     console.log("notif socket is close")
@@ -227,9 +228,18 @@
   }
 
   notifSocket.addEventListener("message" , e => {
-    notificationCount++
+    const data = JSON.parse(e.data)
+    if (data.notif_count == 0 || data.notif_count > 0){
+      notificationCount = Number(data.notif_count)
+    }
+    else{
+      console.log("ok")
+      notificationCount++
+    }
+
+    
     localStorage.setItem("notif_count" , notificationCount)
-    data = JSON.parse(e.data)
+    
     if (notificationCount > 0){
       notifCounter.classList.remove("hidden")
       notifCounter.textContent = notificationCount
