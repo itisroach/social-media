@@ -24,11 +24,11 @@ RoachGram is a social media platform where users can share their thoughts and po
 
 * ##### following and unfollowing an user endpoint: /api/auth/follow/ (if already followed it will unfollow)
 
-* ##### get single user enpoint: /api/users/<username>/
+* ##### get single user enpoint: /api/users/(username)/
 
-* ##### get single user followers endpoint: /api/users/<useranme>/followers/
+* ##### get single user followers endpoint: /api/users/(useranme)/followers/
 
-* ##### get single user followings endpoint: /api/users/<username>/followings/
+* ##### get single user followings endpoint: /api/users/(username)/followings/
 
 * ##### get all posts: /api/posts/ (depends on user's followings) 
 
@@ -54,11 +54,11 @@ RoachGram is a social media platform where users can share their thoughts and po
 
 ## websocket urls:
 
-* ##### /chats/<room name>/ (room name contains logged in user id and user the logged in user wants to chat wit, like this: "LOGGEDINUSER-ANOTHERUSER")
+* ##### /chats/(room name)/ (room name contains logged in user id and user the logged in user wants to chat wit, like this: "LOGGEDINUSER-ANOTHERUSER")
 
-* #### /notifications/<username>/ always connected to this for receiving realtime notifications and send request to add notification in these actions -> ["follow" , "like" , "comment" , "bookmark"]. data needed for this route is =>  type: on of previous listed request, user_to_notif: user we want to send notification to, triggered_by: user who performed action  
+* #### /notifications/(username)/ always connected to this for receiving realtime notifications and send request to add notification in these actions -) ["follow" , "like" , "comment" , "bookmark"]. data needed for this route is =)  type: on of previous listed request, user_to_notif: user we want to send notification to, triggered_by: user who performed action  
 
-* #### /notification/<username>/<last-notif-id>/seen/ when user enters to notification page send request with last notification id to mark notification as seen. no data needed except those in url 
+* #### /notification/(username)/(last-notif-id)/seen/ when user enters to notification page send request with last notification id to mark notification as seen. no data needed except those in url 
 
 
 * #### RoachGram is live on: [https://amiraliashoori6.pythonanywhere.com/](https://amiraliashoori6.pythonanywhere.com/)
