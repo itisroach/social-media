@@ -7,7 +7,7 @@ from rest_framework_simplejwt.views import (
 )
 
 urlpatterns = [
-    path("register" , viewsets.RegisterUser.as_view() , name="api-register"),    
+    path("auth/register/" , viewsets.RegisterUser.as_view() , name="api-register"),    
     path("user" , viewsets.UserView.as_view() , name="api-user"),    
     path("edit-user" , viewsets.UpdateUser.as_view() , name="api-update-user"),
     path("change-password" , viewsets.ChangePassword.as_view() , name="api-change-password"),
@@ -21,7 +21,7 @@ urlpatterns = [
     path("users/<str:username>/followings" , viewsets.OneUserFollowings.as_view() , name="api-users-followings"),
     
     # JWT authentication
-    path('login', viewsets.MyToken.as_view(), name='token_obtain_pair'),
-    path('login/refresh', TokenRefreshView.as_view(), name='token_refresh'),
+    path('auth/login', viewsets.MyToken.as_view(), name='token_obtain_pair'),
+    path('auth/login/refresh', TokenRefreshView.as_view(), name='token_refresh'),
 
 ]
