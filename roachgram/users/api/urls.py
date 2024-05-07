@@ -9,8 +9,8 @@ from rest_framework_simplejwt.views import (
 urlpatterns = [
     path("auth/register/" , viewsets.RegisterUser.as_view() , name="api-register"),    
     path("user" , viewsets.UserView.as_view() , name="api-user"),    
-    path("edit-user" , viewsets.UpdateUser.as_view() , name="api-update-user"),
-    path("change-password" , viewsets.ChangePassword.as_view() , name="api-change-password"),
+    path("/auth/edit-user" , viewsets.UpdateUser.as_view() , name="api-update-user"),
+    path("/auth/change-password" , viewsets.ChangePassword.as_view() , name="api-change-password"),
     path("users" , viewsets.AllUsers.as_view() , name="all-users"),
     path("users/follow" , viewsets.FollowView.as_view() , name="follow-user"),
     path("users/notifications/" , viewsets.Notifications.as_view() , name="api-notifications"),
