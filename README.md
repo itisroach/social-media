@@ -79,4 +79,8 @@ RoachGram is a social media platform where users can share their thoughts and po
 
 * the media that users upload will be stored on server not on a cloud platform (because of some limitations) and only image types accepted because of that.
 
+
+* django channels (web socket) implemented but the free plan won't support it. so you can not use the chat section on live version but in local it will work.
+
+
 * API uses [cursor pagination](https://www.django-rest-framework.org/api-guide/pagination/#cursorpagination) when fetching large data for improving response time.
